@@ -2076,7 +2076,7 @@ var $internalize = function(v, t, recv) {
 };
 
 $packages["github.com/gopherjs/gopherjs/js"] = (function() {
-	var $pkg = {}, $init, Object, Error, sliceType, ptrType, sliceType$2, funcType, ptrType$1, MakeWrapper, init;
+	var $pkg = {}, $init, Object, Error, M, sliceType, ptrType, sliceType$2, funcType, ptrType$1, MakeWrapper, init;
 	Object = $pkg.Object = $newType(0, $kindStruct, "js.Object", "Object", "github.com/gopherjs/gopherjs/js", function(object_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -2093,6 +2093,7 @@ $packages["github.com/gopherjs/gopherjs/js"] = (function() {
 		}
 		this.Object = Object_;
 	});
+	M = $pkg.M = $newType(4, $kindMap, "js.M", "M", "github.com/gopherjs/gopherjs/js", null);
 	sliceType = $sliceType($emptyInterface);
 	ptrType = $ptrType(Object);
 	sliceType$2 = $sliceType(ptrType);
@@ -2244,6 +2245,7 @@ $packages["github.com/gopherjs/gopherjs/js"] = (function() {
 	ptrType$1.methods = [{prop: "Error", name: "Error", pkg: "", typ: $funcType([], [$String], false)}, {prop: "Stack", name: "Stack", pkg: "", typ: $funcType([], [$String], false)}];
 	Object.init([{prop: "object", name: "object", pkg: "github.com/gopherjs/gopherjs/js", typ: ptrType, tag: ""}]);
 	Error.init([{prop: "Object", name: "", pkg: "", typ: ptrType, tag: ""}]);
+	M.init($String, $emptyInterface);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -3510,7 +3512,7 @@ $packages["syscall"] = (function() {
 	return $pkg;
 })();
 $packages["time"] = (function() {
-	var $pkg = {}, $init, errors, js, nosync, runtime, strings, syscall, ParseError, Time, Month, Weekday, Duration, Location, zone, zoneTrans, sliceType, sliceType$1, ptrType, sliceType$2, arrayType, sliceType$3, arrayType$1, arrayType$2, ptrType$1, arrayType$4, ptrType$3, ptrType$6, std0x, longDayNames, shortDayNames, shortMonthNames, longMonthNames, atoiError, errBad, errLeadingInt, months, days, daysBefore, utcLoc, utcLoc$24ptr, localLoc, localLoc$24ptr, localOnce, zoneinfo, badData, zoneDirs, _tuple, _r, init, initLocal, startsWithLowerCase, nextStdChunk, match, lookup, appendInt, atoi, formatNano, quote, isDigit, getnum, cutspace, skip, Parse, parse, parseTimeZone, parseGMT, parseNanoseconds, leadingInt, absWeekday, absClock, fmtFrac, fmtInt, absDate, daysIn, Unix, isLeap, norm, Date, div, FixedZone;
+	var $pkg = {}, $init, errors, js, nosync, runtime, strings, syscall, ParseError, Time, Month, Weekday, Duration, Location, zone, zoneTrans, sliceType, sliceType$1, ptrType, sliceType$2, structType, arrayType, sliceType$3, arrayType$1, arrayType$2, ptrType$1, arrayType$4, ptrType$3, ptrType$6, std0x, longDayNames, shortDayNames, shortMonthNames, longMonthNames, atoiError, errBad, errLeadingInt, months, days, daysBefore, utcLoc, utcLoc$24ptr, localLoc, localLoc$24ptr, localOnce, zoneinfo, badData, zoneDirs, _tuple, _r, init, initLocal, Sleep, startsWithLowerCase, nextStdChunk, match, lookup, appendInt, atoi, formatNano, quote, isDigit, getnum, cutspace, skip, Parse, parse, parseTimeZone, parseGMT, parseNanoseconds, leadingInt, absWeekday, absClock, fmtFrac, fmtInt, absDate, daysIn, Unix, isLeap, norm, Date, div, FixedZone;
 	errors = $packages["errors"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	nosync = $packages["github.com/gopherjs/gopherjs/nosync"];
@@ -3596,6 +3598,7 @@ $packages["time"] = (function() {
 	sliceType$1 = $sliceType(zoneTrans);
 	ptrType = $ptrType(zone);
 	sliceType$2 = $sliceType($String);
+	structType = $structType([]);
 	arrayType = $arrayType($Uint8, 20);
 	sliceType$3 = $sliceType($Uint8);
 	arrayType$1 = $arrayType($Uint8, 9);
@@ -3621,6 +3624,20 @@ $packages["time"] = (function() {
 		localLoc.name = s.substring((i + 1 >> 0), j);
 		localLoc.zone = new sliceType([new zone.ptr(localLoc.name, $imul(($parseInt(d.getTimezoneOffset()) >> 0), -60), false)]);
 	};
+	Sleep = function(d) {
+		var $ptr, _r$1, c, d, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$1 = $f._r$1; c = $f.c; d = $f.d; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c = [c];
+		c[0] = new $Chan(structType, 0);
+		$setTimeout((function(c) { return function() {
+			var $ptr;
+			$close(c[0]);
+		}; })(c), ((x = $div64(d, new Duration(0, 1000000), false), x.$low + ((x.$high >> 31) * 4294967296)) >> 0));
+		_r$1 = $recv(c[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1[0];
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Sleep }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f.c = c; $f.d = d; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Sleep = Sleep;
 	startsWithLowerCase = function(str) {
 		var $ptr, c, str;
 		if (str.length === 0) {
@@ -6124,7 +6141,7 @@ $packages["honnef.co/go/js/dom"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
-	var $pkg = {}, $init, js, dom, settingType, FBSettingOpt, FBSettingSet, FBSetting, DsPluginDefinition, mapType, sliceType, mapType$1, sliceType$1, ptrType, funcType, funcType$1, funcType$2, sliceType$2, sliceType$3, sliceType$4, sliceType$5, init, LoadDatasourcePlugin;
+	var $pkg = {}, $init, js, dom, settingType, FBSettingOpt, FBSettingSet, FBSetting, DsPluginDefinition, mapType, sliceType, mapType$1, sliceType$1, ptrType, funcType, sliceType$2, sliceType$3, sliceType$4, sliceType$5, init, LoadDatasourcePlugin;
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	dom = $packages["honnef.co/go/js/dom"];
 	settingType = $pkg.settingType = $newType(8, $kindString, "freeboard.settingType", "settingType", "github.com/cathalgarvey/go-freeboard", null);
@@ -6195,9 +6212,7 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 	mapType$1 = $mapType($String, $emptyInterface);
 	sliceType$1 = $sliceType(mapType$1);
 	ptrType = $ptrType(js.Object);
-	funcType = $funcType([ptrType], [], false);
-	funcType$1 = $funcType([$emptyInterface], [], false);
-	funcType$2 = $funcType([mapType$1, funcType, funcType$1], [], false);
+	funcType = $funcType([ptrType, ptrType, ptrType], [], false);
 	sliceType$2 = $sliceType(FBSettingOpt);
 	sliceType$3 = $sliceType(FBSettingSet);
 	sliceType$4 = $sliceType($String);
@@ -6272,7 +6287,7 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 			_i++;
 		}
 		_key$4 = "settings"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$4)] = { k: _key$4, v: settingSlice };
-		_key$5 = "newInstance"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$5)] = { k: _key$5, v: new funcType$2(dsp.NewInstance) };
+		_key$5 = "newInstance"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$5)] = { k: _key$5, v: new funcType(dsp.NewInstance) };
 		return output;
 	};
 	DsPluginDefinition.prototype.ToFBInterface = function() { return this.$val.ToFBInterface(); };
@@ -6283,15 +6298,15 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 	LoadDatasourcePlugin = function(ds) {
 		var $ptr, ds;
 		ds = $clone(ds, DsPluginDefinition);
-		$pkg.FreeBoard.loadDatasourcePlugin($externalize(ds.ToFBInterface(), mapType$1));
+		$pkg.FreeBoard.loadDatasourcePlugin($externalize(ds.ToFBInterface(), js.M));
 	};
 	$pkg.LoadDatasourcePlugin = LoadDatasourcePlugin;
 	FBSetting.methods = [{prop: "ToFBInterface", name: "ToFBInterface", pkg: "", typ: $funcType([], [mapType$1], false)}];
-	DsPluginDefinition.methods = [{prop: "ToFBInterface", name: "ToFBInterface", pkg: "", typ: $funcType([], [mapType$1], false)}];
+	DsPluginDefinition.methods = [{prop: "ToFBInterface", name: "ToFBInterface", pkg: "", typ: $funcType([], [js.M], false)}];
 	FBSettingOpt.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "Value", name: "Value", pkg: "", typ: $String, tag: ""}]);
 	FBSettingSet.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Type", name: "Type", pkg: "", typ: settingType, tag: ""}]);
 	FBSetting.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Description", name: "Description", pkg: "", typ: $String, tag: ""}, {prop: "Type", name: "Type", pkg: "", typ: settingType, tag: ""}, {prop: "Options", name: "Options", pkg: "", typ: sliceType$2, tag: ""}, {prop: "Settings", name: "Settings", pkg: "", typ: sliceType$3, tag: ""}, {prop: "DefaultStringValue", name: "DefaultStringValue", pkg: "", typ: $String, tag: ""}, {prop: "DefaultIntValue", name: "DefaultIntValue", pkg: "", typ: $Int, tag: ""}]);
-	DsPluginDefinition.init([{prop: "TypeName", name: "TypeName", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Description", name: "Description", pkg: "", typ: $String, tag: ""}, {prop: "ExternalScripts", name: "ExternalScripts", pkg: "", typ: sliceType$4, tag: ""}, {prop: "Settings", name: "Settings", pkg: "", typ: sliceType$5, tag: ""}, {prop: "NewInstance", name: "NewInstance", pkg: "", typ: funcType$2, tag: ""}]);
+	DsPluginDefinition.init([{prop: "TypeName", name: "TypeName", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Description", name: "Description", pkg: "", typ: $String, tag: ""}, {prop: "ExternalScripts", name: "ExternalScripts", pkg: "", typ: sliceType$4, tag: ""}, {prop: "Settings", name: "Settings", pkg: "", typ: sliceType$5, tag: ""}, {prop: "NewInstance", name: "NewInstance", pkg: "", typ: funcType, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -6309,14 +6324,15 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 	return $pkg;
 })();
 $packages["main"] = (function() {
-	var $pkg = {}, $init, freeboard, js, TestPlugin, sliceType, sliceType$1, sliceType$2, sliceType$3, sliceType$4, mapType, ptrType, funcType, cons, init, pr, main;
+	var $pkg = {}, $init, freeboard, js, time, TestPlugin, sliceType, sliceType$1, sliceType$2, sliceType$3, sliceType$4, ptrType, ptrType$1, funcType, cons, init, pr, main;
 	freeboard = $packages["github.com/cathalgarvey/go-freeboard"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
+	time = $packages["time"];
 	TestPlugin = $pkg.TestPlugin = $newType(0, $kindStruct, "main.TestPlugin", "TestPlugin", "main", function(UpdateFunc_, settings_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.UpdateFunc = $throwNilPointerError;
-			this.settings = false;
+			this.settings = null;
 			return;
 		}
 		this.UpdateFunc = UpdateFunc_;
@@ -6327,9 +6343,9 @@ $packages["main"] = (function() {
 	sliceType$2 = $sliceType(freeboard.FBSettingOpt);
 	sliceType$3 = $sliceType(freeboard.FBSettingSet);
 	sliceType$4 = $sliceType($emptyInterface);
-	mapType = $mapType($String, $emptyInterface);
-	ptrType = $ptrType(TestPlugin);
-	funcType = $funcType([$emptyInterface], [], false);
+	ptrType = $ptrType(js.Object);
+	ptrType$1 = $ptrType(TestPlugin);
+	funcType = $funcType([ptrType], [], false);
 	init = function() {
 		var $ptr;
 		cons = $global.console;
@@ -6348,40 +6364,54 @@ $packages["main"] = (function() {
 		(obj = cons, obj.log.apply(obj, $externalize(args, sliceType$4)));
 	};
 	TestPlugin.ptr.prototype.onSettingsChanged = function(settings) {
-		var $ptr, _entry, settings, tp, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; settings = $f.settings; tp = $f.tp; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, settings, tp, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; settings = $f.settings; tp = $f.tp; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		tp = this;
 		tp.settings = settings;
-		$r = tp.UpdateFunc(new $String($assertType((_entry = settings[$String.keyFor("datatext")], _entry !== undefined ? _entry.v : $ifaceNil), $String))); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TestPlugin.ptr.prototype.onSettingsChanged }; } $f.$ptr = $ptr; $f._entry = _entry; $f.settings = settings; $f.tp = tp; $f.$s = $s; $f.$r = $r; return $f;
+		$r = tp.UpdateFunc(tp.settings); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TestPlugin.ptr.prototype.onSettingsChanged }; } $f.$ptr = $ptr; $f.settings = settings; $f.tp = tp; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	TestPlugin.prototype.onSettingsChanged = function(settings) { return this.$val.onSettingsChanged(settings); };
 	main = function() {
 		var $ptr;
 		freeboard.LoadDatasourcePlugin($pkg.TestDefinition);
 	};
-	ptrType.methods = [{prop: "onSettingsChanged", name: "onSettingsChanged", pkg: "main", typ: $funcType([mapType], [], false)}, {prop: "updateNow", name: "updateNow", pkg: "main", typ: $funcType([], [], false)}, {prop: "onDispose", name: "onDispose", pkg: "main", typ: $funcType([], [], false)}];
-	TestPlugin.init([{prop: "UpdateFunc", name: "UpdateFunc", pkg: "", typ: funcType, tag: ""}, {prop: "settings", name: "settings", pkg: "main", typ: mapType, tag: ""}]);
+	ptrType$1.methods = [{prop: "onSettingsChanged", name: "onSettingsChanged", pkg: "main", typ: $funcType([ptrType], [], false)}, {prop: "updateNow", name: "updateNow", pkg: "main", typ: $funcType([], [], false)}, {prop: "onDispose", name: "onDispose", pkg: "main", typ: $funcType([], [], false)}];
+	TestPlugin.init([{prop: "UpdateFunc", name: "UpdateFunc", pkg: "", typ: funcType, tag: ""}, {prop: "settings", name: "settings", pkg: "main", typ: ptrType, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = freeboard.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = js.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = time.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		cons = null;
 		$pkg.TestDefinition = new freeboard.DsPluginDefinition.ptr("testplugin1", "test plugin", "This is a test plugin", new sliceType([]), new sliceType$1([new freeboard.FBSetting.ptr("datatext", "Data Text", "Text to provide as data.", freeboard.SettingTextType, sliceType$2.nil, sliceType$3.nil, "Foobar", 0)]), (function $b(settings, newInstanceCallback, updateCallback) {
-			var $ptr, _entry, newInstanceCallback, pl, settings, updateCallback, wrapper, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; newInstanceCallback = $f.newInstanceCallback; pl = $f.pl; settings = $f.settings; updateCallback = $f.updateCallback; wrapper = $f.wrapper; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			pr(new sliceType(["In NewInstance, with settings:", $assertType((_entry = settings[$String.keyFor("datatext")], _entry !== undefined ? _entry.v : $ifaceNil), $String)]));
-			pl = new TestPlugin.ptr($throwNilPointerError, false);
+			var $ptr, newInstanceCallback, pl, settings, updateCallback, wrapper, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; newInstanceCallback = $f.newInstanceCallback; pl = $f.pl; settings = $f.settings; updateCallback = $f.updateCallback; wrapper = $f.wrapper; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			updateCallback = [updateCallback];
+			pr(new sliceType(["In NewInstance"]));
+			pl = new TestPlugin.ptr($throwNilPointerError, null);
 			pr(new sliceType(["Made new TestPlugin, assigning settings."]));
 			$r = pl.onSettingsChanged(settings); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			pr(new sliceType(["Assigning updatefunc."]));
-			pl.UpdateFunc = updateCallback;
+			pl.UpdateFunc = (function(updateCallback) { return function(i) {
+				var $ptr, i;
+				updateCallback[0].apply(i);
+			}; })(updateCallback);
+			$go((function(updateCallback) { return function $b(pl$1) {
+				var $ptr, pl$1, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; pl$1 = $f.pl$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				/* while (true) { */ case 1:
+					$r = pl$1.UpdateFunc(pl$1.settings); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					$r = time.Sleep(new time.Duration(1, 705032704)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* } */ $s = 1; continue; case 2:
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.pl$1 = pl$1; $f.$s = $s; $f.$r = $r; return $f;
+			}; })(updateCallback), [pl]);
 			pr(new sliceType(["Making wrapper"]));
 			wrapper = js.MakeWrapper(pl);
 			pr(new sliceType(["Returning wrapper through newInstanceCallback"]));
-			$r = newInstanceCallback(wrapper); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._entry = _entry; $f.newInstanceCallback = newInstanceCallback; $f.pl = pl; $f.settings = settings; $f.updateCallback = updateCallback; $f.wrapper = wrapper; $f.$s = $s; $f.$r = $r; return $f;
+			newInstanceCallback.apply(wrapper);
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.newInstanceCallback = newInstanceCallback; $f.pl = pl; $f.settings = settings; $f.updateCallback = updateCallback; $f.wrapper = wrapper; $f.$s = $s; $f.$r = $r; return $f;
 		}));
 		init();
 		if ($pkg === $mainPkg) {

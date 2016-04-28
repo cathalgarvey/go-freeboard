@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/cathalgarvey/go-freeboard"
 	"github.com/gopherjs/gopherjs/js"
 )
@@ -23,14 +25,15 @@ func pr(s ...string) {
 
 // TestPlugin is me noodling around with the freeboard interface.
 type TestPlugin struct {
-	UpdateFunc func(interface{})
-	settings   map[string]interface{}
+	UpdateFunc func(*js.Object)
+	settings   *js.Object
 }
 
 // Called when new settings are given.
-func (tp *TestPlugin) onSettingsChanged(settings map[string]interface{}) {
+//func (tp *TestPlugin) onSettingsChanged(settings map[string]interface{}) {
+func (tp *TestPlugin) onSettingsChanged(settings *js.Object) {
 	tp.settings = settings
-	tp.UpdateFunc(settings["datatext"].(string))
+	tp.UpdateFunc(tp.settings)
 }
 
 // A public function we must implement
@@ -92,17 +95,23 @@ var TestDefinition = freeboard.DsPluginDefinition{
 	//   your new plugin from a constructor function?
 	// * updateCallback should be called with new data whenever it's
 	//   ready for freeboard. This should be kept by the new instance.
-	NewInstance: func(settings map[string]interface{}, newInstanceCallback func(*js.Object), updateCallback func(interface{})) {
-		pr("In NewInstance, with settings:", settings["datatext"].(string))
+	NewInstance: func(settings, newInstanceCallback, updateCallback *js.Object) {
+		pr("In NewInstance")
 		pl := new(TestPlugin)
 		pr("Made new TestPlugin, assigning settings.")
 		pl.onSettingsChanged(settings)
 		pr("Assigning updatefunc.")
-		pl.UpdateFunc = updateCallback
+		pl.UpdateFunc = func(i *js.Object) { updateCallback.Call("apply", i) }
+		go func(pl *TestPlugin) {
+			for {
+				pl.UpdateFunc(pl.settings)
+				time.Sleep(5 * time.Second)
+			}
+		}(pl)
 		pr("Making wrapper")
 		wrapper := js.MakeWrapper(pl)
 		pr("Returning wrapper through newInstanceCallback")
-		newInstanceCallback(wrapper)
+		newInstanceCallback.Call("apply", wrapper)
 	},
 }
 

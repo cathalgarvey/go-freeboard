@@ -151,11 +151,12 @@ type DsPluginDefinition struct {
 	//   ready for freeboard. This should be kept by the new instance.
 	//NewInstance func(settings map[string]interface{}, newInstanceCallback func(DsPlugin), updateCallback func(interface{}))
 	//NewInstance func(settings map[string]interface{}, newInstanceCallback func(map[string]interface{}), updateCallback func(interface{}))
-	NewInstance func(settings map[string]interface{}, newInstanceCallback func(*js.Object), updateCallback func(interface{}))
+	//NewInstance func(settings map[string]interface{}, newInstanceCallback func(*js.Object), updateCallback func(interface{}))
+	NewInstance func(settings, newInstanceCallback, updateCallback *js.Object)
 }
 
 // ToFBInterface returns a map for FreeBoard's loadDatasourcePlugin func.
-func (dsp DsPluginDefinition) ToFBInterface() map[string]interface{} {
+func (dsp DsPluginDefinition) ToFBInterface() js.M {
 	output := make(map[string]interface{})
 	output["type_name"] = dsp.TypeName
 	output["display_name"] = dsp.DisplayName
@@ -167,5 +168,5 @@ func (dsp DsPluginDefinition) ToFBInterface() map[string]interface{} {
 	}
 	output["settings"] = settingSlice
 	output["newInstance"] = dsp.NewInstance
-	return output
+	return js.M(output)
 }
