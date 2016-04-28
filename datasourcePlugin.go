@@ -22,8 +22,10 @@ type DsPlugin interface {
 type settingType string
 
 var (
-	// SettingTextType is used for text or numeric input.
+	// SettingTextType is used for text input.
 	SettingTextType settingType = "text"
+	// SettingNumberType is used for number input
+	SettingNumberType settingType = "number"
 	// SettingCalculatedType is used to permit access to datasources or to calculated JS.
 	SettingCalculatedType settingType = "calculated"
 	// SettingBooleanType is used to provide a checkbox.
@@ -64,9 +66,13 @@ type FBSetting struct {
 	Options []FBSettingOpt
 	// Settings is required for "array" type settings.
 	Settings []FBSettingSet
-	// DefaultValues are the default value. Optional. String takes precedence.
+	// DefaultValues are the default value. Optional. String takes precedence in text.
 	DefaultStringValue string
-	DefaultIntValue    int
+	// DefaltIntValue or DefaultFloatValue can be used as default values for
+	// number types; whichever is nonzero is used. If both are nonzero, panic!
+	// If both are zero, then the default is left unset.
+	DefaultIntValue   int
+	DefaultFloatValue float64
 }
 
 // ToFBInterface compiles a setting to a map-able representation
@@ -85,6 +91,16 @@ func (set FBSetting) ToFBInterface() map[string]interface{} {
 				output["default_value"] = set.DefaultStringValue
 			} else if set.DefaultIntValue != 0 {
 				output["default_value"] = set.DefaultIntValue
+			}
+		}
+	case SettingNumberType:
+		{
+			if set.DefaultIntValue != 0 && set.DefaultFloatValue == 0 {
+				output["default_value"] = set.DefaultIntValue
+			} else if set.DefaultFloatValue != 0.0 && set.DefaultIntValue == 0 {
+				output["default_value"] = set.DefaultFloatValue
+			} else if set.DefaultIntValue != 0 && set.DefaultFloatValue != 0.0 {
+				panic("Cannot have defaults for both int and float numeric values.")
 			}
 		}
 	case SettingOptionType:
@@ -161,7 +177,10 @@ func (dsp DsPluginDefinition) ToFBInterface() js.M {
 	output["type_name"] = dsp.TypeName
 	output["display_name"] = dsp.DisplayName
 	output["description"] = dsp.Description
-	output["external_scripts"] = dsp.ExternalScripts
+	// Exposing an empty array for ExternalScripts breaks freeboard plugins.
+	if dsp.ExternalScripts != nil && len(dsp.ExternalScripts) > 0 {
+		output["external_scripts"] = dsp.ExternalScripts
+	}
 	settingSlice := make([]map[string]interface{}, 0, len(dsp.Settings))
 	for _, s := range dsp.Settings {
 		settingSlice = append(settingSlice, s.ToFBInterface())

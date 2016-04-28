@@ -40,9 +40,11 @@ func (tp *TestPlugin) onSettingsChanged(settings *js.Object) {
 // that will be called when the user wants
 // to manually refresh the datasource
 func (tp *TestPlugin) updateNow() {
-	pr("Update called.")
-	tp.UpdateFunc(tp.settings)
-	pr("Update delivered.")
+	data := map[string]string{
+		"animal":   "dinosaur",
+		"datatext": tp.settings.Get("datatext").String(),
+	}
+	tp.UpdateFunc(data)
 }
 
 // A public function we must implement that
