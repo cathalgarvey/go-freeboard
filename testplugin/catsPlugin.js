@@ -6241,9 +6241,11 @@ $packages["honnef.co/go/js/dom"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
-	var $pkg = {}, $init, js, dom, settingType, FBSettingOpt, FBSettingSet, FBSetting, DsPluginDefinition, mapType, sliceType, sliceType$1, mapType$1, sliceType$2, ptrType, funcType, sliceType$3, sliceType$4, sliceType$5, init, LoadDatasourcePlugin;
+	var $pkg = {}, $init, js, dom, time, DsPlugin, settingType, FBSettingOpt, FBSettingSet, FBSetting, DsPluginDefinition, funcType, ptrType, funcType$1, funcType$2, mapType, sliceType, sliceType$1, mapType$1, sliceType$2, funcType$3, sliceType$3, sliceType$4, sliceType$5, funcType$6, funcType$7, WrapDsPlugin, MakeUpdateTicker, init, LoadDatasourcePlugin;
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	dom = $packages["honnef.co/go/js/dom"];
+	time = $packages["time"];
+	DsPlugin = $pkg.DsPlugin = $newType(8, $kindInterface, "freeboard.DsPlugin", "DsPlugin", "github.com/cathalgarvey/go-freeboard", null);
 	settingType = $pkg.settingType = $newType(8, $kindString, "freeboard.settingType", "settingType", "github.com/cathalgarvey/go-freeboard", null);
 	FBSettingOpt = $pkg.FBSettingOpt = $newType(0, $kindStruct, "freeboard.FBSettingOpt", "FBSettingOpt", "github.com/cathalgarvey/go-freeboard", function(Name_, Value_) {
 		this.$val = this;
@@ -6309,16 +6311,49 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 		this.Settings = Settings_;
 		this.NewInstance = NewInstance_;
 	});
+	funcType = $funcType([], [], false);
+	ptrType = $ptrType(js.Object);
+	funcType$1 = $funcType([ptrType], [], false);
+	funcType$2 = $funcType([], [ptrType], false);
 	mapType = $mapType($String, $String);
 	sliceType = $sliceType(mapType);
 	sliceType$1 = $sliceType($String);
 	mapType$1 = $mapType($String, $emptyInterface);
 	sliceType$2 = $sliceType(mapType$1);
-	ptrType = $ptrType(js.Object);
-	funcType = $funcType([ptrType, ptrType, ptrType], [], false);
+	funcType$3 = $funcType([ptrType, ptrType, ptrType], [], false);
 	sliceType$3 = $sliceType(FBSettingOpt);
 	sliceType$4 = $sliceType(FBSettingSet);
 	sliceType$5 = $sliceType(FBSetting);
+	funcType$6 = $funcType([$emptyInterface], [], false);
+	funcType$7 = $funcType([ptrType, funcType$6], [DsPlugin], false);
+	WrapDsPlugin = function(dsp) {
+		var $ptr, dsp;
+		return $makeMap($String.keyFor, [{ k: "plugin", v: dsp }, { k: "updateNow", v: new funcType($methodVal(dsp, "UpdateNow")) }, { k: "onDispose", v: new funcType($methodVal(dsp, "OnDispose")) }, { k: "onSettingsChanged", v: new funcType$1($methodVal(dsp, "OnSettingsChanged")) }, { k: "currentSettings", v: new funcType$2($methodVal(dsp, "CurrentSettings")) }]);
+	};
+	$pkg.WrapDsPlugin = WrapDsPlugin;
+	MakeUpdateTicker = function(dsp, seconds) {
+		var $ptr, closeToKillUpdate, dsp, seconds;
+		closeToKillUpdate = new $Chan($emptyInterface, 0);
+		$go((function $b(dsp$1, seconds$1) {
+			var $ptr, _r, _selection, dsp$1, seconds$1, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _selection = $f._selection; dsp$1 = $f.dsp$1; seconds$1 = $f.seconds$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			/* while (true) { */ case 1:
+				_r = $select([[closeToKillUpdate], [time.After($mul64(new time.Duration(0, seconds$1), new time.Duration(0, 1000000000)))]]); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_selection = _r;
+				/* */ if (_selection[0] === 0) { $s = 4; continue; }
+				/* */ if (_selection[0] === 1) { $s = 5; continue; }
+				/* */ $s = 6; continue;
+				/* if (_selection[0] === 0) { */ case 4:
+					return;
+				/* } else if (_selection[0] === 1) { */ case 5:
+					$r = dsp$1.UpdateNow(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* } */ case 6:
+			/* } */ $s = 1; continue; case 2:
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f._selection = _selection; $f.dsp$1 = dsp$1; $f.seconds$1 = seconds$1; $f.$s = $s; $f.$r = $r; return $f;
+		}), [dsp, seconds]);
+		return closeToKillUpdate;
+	};
+	$pkg.MakeUpdateTicker = MakeUpdateTicker;
 	FBSetting.ptr.prototype.ToFBInterface = function() {
 		var $ptr, _1, _entry, _entry$1, _i, _i$1, _key, _key$1, _key$10, _key$11, _key$12, _key$13, _key$14, _key$15, _key$16, _key$17, _key$2, _key$3, _key$4, _key$5, _key$6, _key$7, _key$8, _key$9, _ref, _ref$1, o, opt, output, s, set, st;
 		set = $clone(this, FBSetting);
@@ -6399,7 +6434,19 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 			_i++;
 		}
 		_key$4 = "settings"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$4)] = { k: _key$4, v: settingSlice };
-		_key$5 = "newInstance"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$5)] = { k: _key$5, v: new funcType(dsp.NewInstance) };
+		_key$5 = "newInstance"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$5)] = { k: _key$5, v: new funcType$3((function $b(settings, newInstanceCallback, updateCallback) {
+			var $ptr, Plugin, _r, newInstanceCallback, settings, updateCallback, wrapper, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; Plugin = $f.Plugin; _r = $f._r; newInstanceCallback = $f.newInstanceCallback; settings = $f.settings; updateCallback = $f.updateCallback; wrapper = $f.wrapper; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			updateCallback = [updateCallback];
+			_r = dsp.NewInstance(settings, (function(updateCallback) { return function(i) {
+				var $ptr, i;
+				updateCallback[0]($externalize(i, $emptyInterface));
+			}; })(updateCallback)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			Plugin = _r;
+			wrapper = WrapDsPlugin(Plugin);
+			newInstanceCallback($externalize(wrapper, mapType$1));
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.Plugin = Plugin; $f._r = _r; $f.newInstanceCallback = newInstanceCallback; $f.settings = settings; $f.updateCallback = updateCallback; $f.wrapper = wrapper; $f.$s = $s; $f.$r = $r; return $f;
+		})) };
 		return output;
 	};
 	DsPluginDefinition.prototype.ToFBInterface = function() { return this.$val.ToFBInterface(); };
@@ -6415,15 +6462,17 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 	$pkg.LoadDatasourcePlugin = LoadDatasourcePlugin;
 	FBSetting.methods = [{prop: "ToFBInterface", name: "ToFBInterface", pkg: "", typ: $funcType([], [mapType$1], false)}];
 	DsPluginDefinition.methods = [{prop: "ToFBInterface", name: "ToFBInterface", pkg: "", typ: $funcType([], [mapType$1], false)}];
+	DsPlugin.init([{prop: "CurrentSettings", name: "CurrentSettings", pkg: "", typ: $funcType([], [ptrType], false)}, {prop: "OnDispose", name: "OnDispose", pkg: "", typ: $funcType([], [], false)}, {prop: "OnSettingsChanged", name: "OnSettingsChanged", pkg: "", typ: $funcType([ptrType], [], false)}, {prop: "UpdateNow", name: "UpdateNow", pkg: "", typ: $funcType([], [], false)}]);
 	FBSettingOpt.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "Value", name: "Value", pkg: "", typ: $String, tag: ""}]);
 	FBSettingSet.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Type", name: "Type", pkg: "", typ: settingType, tag: ""}]);
 	FBSetting.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Description", name: "Description", pkg: "", typ: $String, tag: ""}, {prop: "Type", name: "Type", pkg: "", typ: settingType, tag: ""}, {prop: "Options", name: "Options", pkg: "", typ: sliceType$3, tag: ""}, {prop: "Settings", name: "Settings", pkg: "", typ: sliceType$4, tag: ""}, {prop: "DefaultStringValue", name: "DefaultStringValue", pkg: "", typ: $String, tag: ""}, {prop: "DefaultIntValue", name: "DefaultIntValue", pkg: "", typ: $Int, tag: ""}, {prop: "DefaultFloatValue", name: "DefaultFloatValue", pkg: "", typ: $Float64, tag: ""}]);
-	DsPluginDefinition.init([{prop: "TypeName", name: "TypeName", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Description", name: "Description", pkg: "", typ: $String, tag: ""}, {prop: "ExternalScripts", name: "ExternalScripts", pkg: "", typ: sliceType$1, tag: ""}, {prop: "Settings", name: "Settings", pkg: "", typ: sliceType$5, tag: ""}, {prop: "NewInstance", name: "NewInstance", pkg: "", typ: funcType, tag: ""}]);
+	DsPluginDefinition.init([{prop: "TypeName", name: "TypeName", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Description", name: "Description", pkg: "", typ: $String, tag: ""}, {prop: "ExternalScripts", name: "ExternalScripts", pkg: "", typ: sliceType$1, tag: ""}, {prop: "Settings", name: "Settings", pkg: "", typ: sliceType$5, tag: ""}, {prop: "NewInstance", name: "NewInstance", pkg: "", typ: funcType$7, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = js.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = dom.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = time.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$pkg.FreeBoard = null;
 		$pkg.SettingTextType = "text";
 		$pkg.SettingNumberType = "number";
@@ -6437,11 +6486,10 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 	return $pkg;
 })();
 $packages["main"] = (function() {
-	var $pkg = {}, $init, freeboard, js, time, TestPlugin, sliceType, sliceType$1, sliceType$2, sliceType$3, funcType, ptrType, funcType$1, mapType, sliceType$4, mapType$1, ptrType$1, funcType$2, chanType, cons, init, pr, main;
+	var $pkg = {}, $init, freeboard, js, CatsPlugin, sliceType, sliceType$1, sliceType$2, sliceType$3, mapType, ptrType, ptrType$1, funcType, chanType, main;
 	freeboard = $packages["github.com/cathalgarvey/go-freeboard"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
-	time = $packages["time"];
-	TestPlugin = $pkg.TestPlugin = $newType(0, $kindStruct, "main.TestPlugin", "TestPlugin", "main", function(UpdateFunc_, settings_, closeToKillUpdate_) {
+	CatsPlugin = $pkg.CatsPlugin = $newType(0, $kindStruct, "main.CatsPlugin", "CatsPlugin", "main", function(UpdateFunc_, settings_, closeToKillUpdate_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.UpdateFunc = $throwNilPointerError;
@@ -6457,107 +6505,61 @@ $packages["main"] = (function() {
 	sliceType$1 = $sliceType(freeboard.FBSetting);
 	sliceType$2 = $sliceType(freeboard.FBSettingOpt);
 	sliceType$3 = $sliceType(freeboard.FBSettingSet);
-	funcType = $funcType([], [], false);
-	ptrType = $ptrType(js.Object);
-	funcType$1 = $funcType([ptrType], [], false);
 	mapType = $mapType($String, $emptyInterface);
-	sliceType$4 = $sliceType($emptyInterface);
-	mapType$1 = $mapType($String, $String);
-	ptrType$1 = $ptrType(TestPlugin);
-	funcType$2 = $funcType([$emptyInterface], [], false);
+	ptrType = $ptrType(js.Object);
+	ptrType$1 = $ptrType(CatsPlugin);
+	funcType = $funcType([$emptyInterface], [], false);
 	chanType = $chanType($emptyInterface, false, false);
-	init = function() {
-		var $ptr;
-		cons = $global.console;
+	CatsPlugin.ptr.prototype.CurrentSettings = function() {
+		var $ptr, tp;
+		tp = this;
+		return tp.settings;
 	};
-	pr = function(s) {
-		var $ptr, _i, _ref, a, args, obj, s;
-		args = $makeSlice(sliceType$4, 0, s.$length);
-		_ref = s;
-		_i = 0;
-		while (true) {
-			if (!(_i < _ref.$length)) { break; }
-			a = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
-			args = $append(args, new $String(a));
-			_i++;
-		}
-		(obj = cons, obj.log.apply(obj, $externalize(args, sliceType$4)));
-	};
-	TestPlugin.ptr.prototype.onSettingsChanged = function(settings) {
+	CatsPlugin.prototype.CurrentSettings = function() { return this.$val.CurrentSettings(); };
+	CatsPlugin.ptr.prototype.OnSettingsChanged = function(settings) {
 		var $ptr, settings, tp, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; settings = $f.settings; tp = $f.tp; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		tp = this;
 		tp.settings = settings;
-		$r = tp.updateNow(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TestPlugin.ptr.prototype.onSettingsChanged }; } $f.$ptr = $ptr; $f.settings = settings; $f.tp = tp; $f.$s = $s; $f.$r = $r; return $f;
+		$r = tp.UpdateNow(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: CatsPlugin.ptr.prototype.OnSettingsChanged }; } $f.$ptr = $ptr; $f.settings = settings; $f.tp = tp; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	TestPlugin.prototype.onSettingsChanged = function(settings) { return this.$val.onSettingsChanged(settings); };
-	TestPlugin.ptr.prototype.updateNow = function() {
+	CatsPlugin.prototype.OnSettingsChanged = function(settings) { return this.$val.OnSettingsChanged(settings); };
+	CatsPlugin.ptr.prototype.UpdateNow = function() {
 		var $ptr, data, tp, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; data = $f.data; tp = $f.tp; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		tp = this;
-		data = $makeMap($String.keyFor, [{ k: "animal", v: "dinosaur" }, { k: "datatext", v: $internalize(tp.settings.datatext, $String) }]);
-		$r = tp.UpdateFunc(new mapType$1(data)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TestPlugin.ptr.prototype.updateNow }; } $f.$ptr = $ptr; $f.data = data; $f.tp = tp; $f.$s = $s; $f.$r = $r; return $f;
+		data = $makeMap($String.keyFor, [{ k: "animal", v: new $jsObjectPtr(tp.settings.animal) }, { k: "datatext", v: new $jsObjectPtr(tp.settings.datatext) }, { k: "refine", v: new $jsObjectPtr(tp.settings.refine) }]);
+		$r = tp.UpdateFunc(new mapType(data)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: CatsPlugin.ptr.prototype.UpdateNow }; } $f.$ptr = $ptr; $f.data = data; $f.tp = tp; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	TestPlugin.prototype.updateNow = function() { return this.$val.updateNow(); };
-	TestPlugin.ptr.prototype.onDispose = function() {
+	CatsPlugin.prototype.UpdateNow = function() { return this.$val.UpdateNow(); };
+	CatsPlugin.ptr.prototype.OnDispose = function() {
 		var $ptr, tp;
 		tp = this;
 		$close(tp.closeToKillUpdate);
 	};
-	TestPlugin.prototype.onDispose = function() { return this.$val.onDispose(); };
+	CatsPlugin.prototype.OnDispose = function() { return this.$val.OnDispose(); };
 	main = function() {
 		var $ptr;
-		pr(new sliceType(["Registering plugin"]));
+		console.log("Registering plugin");
 		freeboard.LoadDatasourcePlugin($pkg.TestDefinition);
 	};
-	ptrType$1.methods = [{prop: "onSettingsChanged", name: "onSettingsChanged", pkg: "main", typ: $funcType([ptrType], [], false)}, {prop: "updateNow", name: "updateNow", pkg: "main", typ: $funcType([], [], false)}, {prop: "onDispose", name: "onDispose", pkg: "main", typ: $funcType([], [], false)}];
-	TestPlugin.init([{prop: "UpdateFunc", name: "UpdateFunc", pkg: "", typ: funcType$2, tag: ""}, {prop: "settings", name: "settings", pkg: "main", typ: ptrType, tag: ""}, {prop: "closeToKillUpdate", name: "closeToKillUpdate", pkg: "main", typ: chanType, tag: ""}]);
+	ptrType$1.methods = [{prop: "CurrentSettings", name: "CurrentSettings", pkg: "", typ: $funcType([], [ptrType], false)}, {prop: "OnSettingsChanged", name: "OnSettingsChanged", pkg: "", typ: $funcType([ptrType], [], false)}, {prop: "UpdateNow", name: "UpdateNow", pkg: "", typ: $funcType([], [], false)}, {prop: "OnDispose", name: "OnDispose", pkg: "", typ: $funcType([], [], false)}];
+	CatsPlugin.init([{prop: "UpdateFunc", name: "UpdateFunc", pkg: "", typ: funcType, tag: ""}, {prop: "settings", name: "settings", pkg: "main", typ: ptrType, tag: ""}, {prop: "closeToKillUpdate", name: "closeToKillUpdate", pkg: "main", typ: chanType, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = freeboard.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = js.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = time.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		cons = null;
-		$pkg.TestDefinition = new freeboard.DsPluginDefinition.ptr("testplugin1", "test plugin", "This is a test plugin", sliceType.nil, new sliceType$1([new freeboard.FBSetting.ptr("datatext", "Data Text", "Text to provide as data.", freeboard.SettingTextType, sliceType$2.nil, sliceType$3.nil, "Foobar", 0, 0)]), (function(settings, newInstanceCallback, updateCallback) {
-			var $ptr, newInstanceCallback, pl, settings, updateCallback, wrapper;
-			pr(new sliceType(["In NewInstance"]));
-			pl = new TestPlugin.ptr($throwNilPointerError, null, $chanNil);
-			pl.closeToKillUpdate = new $Chan($emptyInterface, 0);
-			pr(new sliceType(["Made new TestPlugin, assigning settings."]));
+		$pkg.TestDefinition = new freeboard.DsPluginDefinition.ptr("catsplugin", "Cats", "This is a demo Golang plugin about cats", sliceType.nil, new sliceType$1([new freeboard.FBSetting.ptr("catname", "Favourite Cat Name", "What would you call your favourite cat?", freeboard.SettingTextType, sliceType$2.nil, sliceType$3.nil, "Meow", 0, 0), new freeboard.FBSetting.ptr("animal", "Animal", "Favourite animal.", freeboard.SettingOptionType, new sliceType$2([new freeboard.FBSettingOpt.ptr("Tiger", ""), new freeboard.FBSettingOpt.ptr("Lion", ""), new freeboard.FBSettingOpt.ptr("Tigon", ""), new freeboard.FBSettingOpt.ptr("Liger", "")]), sliceType$3.nil, "", 0, 0), new freeboard.FBSetting.ptr("refine", "Refined Animal Preference", "More details on what kinda cat you like", freeboard.SettingArrayType, sliceType$2.nil, new sliceType$3([new freeboard.FBSettingSet.ptr("preferred_number", "Preferred number per cage", freeboard.SettingNumberType), new freeboard.FBSettingSet.ptr("preferred_colour", "Preferred cat colour", freeboard.SettingTextType)]), "", 0, 0)]), (function(settings, updateCallback) {
+			var $ptr, pl, settings, updateCallback;
+			pl = new CatsPlugin.ptr($throwNilPointerError, null, $chanNil);
 			pl.settings = settings;
-			pr(new sliceType(["Creating updatefunc closure."]));
-			pl.UpdateFunc = (function(i) {
-				var $ptr, i;
-				updateCallback.call(undefined, $externalize(i, $emptyInterface));
-			});
-			pr(new sliceType(["Creating heartbeat update goroutine"]));
-			$go((function $b(pl$1) {
-				var $ptr, _r, _selection, pl$1, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _selection = $f._selection; pl$1 = $f.pl$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-				/* while (true) { */ case 1:
-					_r = $select([[pl$1.closeToKillUpdate], [time.After(new time.Duration(1, 705032704))]]); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-					_selection = _r;
-					/* */ if (_selection[0] === 0) { $s = 4; continue; }
-					/* */ if (_selection[0] === 1) { $s = 5; continue; }
-					/* */ $s = 6; continue;
-					/* if (_selection[0] === 0) { */ case 4:
-						return;
-					/* } else if (_selection[0] === 1) { */ case 5:
-						$r = pl$1.updateNow(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					/* } */ case 6:
-				/* } */ $s = 1; continue; case 2:
-				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f._selection = _selection; $f.pl$1 = pl$1; $f.$s = $s; $f.$r = $r; return $f;
-			}), [pl]);
-			pr(new sliceType(["Making return wrapper"]));
-			wrapper = $makeMap($String.keyFor, [{ k: "Plugin", v: pl }, { k: "updateNow", v: new funcType($methodVal(pl, "updateNow")) }, { k: "onDispose", v: new funcType($methodVal(pl, "onDispose")) }, { k: "onSettingsChanged", v: new funcType$1($methodVal(pl, "onSettingsChanged")) }]);
-			pr(new sliceType(["Returning wrapper through newInstanceCallback"]));
-			$global.testPluginInstance = $externalize(wrapper, mapType);
-			newInstanceCallback.call(undefined, $externalize(wrapper, mapType));
+			pl.UpdateFunc = updateCallback;
+			pl.closeToKillUpdate = freeboard.MakeUpdateTicker(pl, 5);
+			return pl;
 		}));
-		init();
 		if ($pkg === $mainPkg) {
 			main();
 			$mainFinished = true;
@@ -6574,4 +6576,4 @@ $go($mainPkg.$init, [], true);
 $flushConsole();
 
 }).call(this);
-//# sourceMappingURL=test.js.map
+//# sourceMappingURL=catsPlugin.js.map

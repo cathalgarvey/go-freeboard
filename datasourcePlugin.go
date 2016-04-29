@@ -1,22 +1,63 @@
 package freeboard
 
-import "github.com/gopherjs/gopherjs/js"
+import (
+	"time"
+
+	"github.com/gopherjs/gopherjs/js"
+)
 
 // DsPlugin is a constructed plugin that presents
 // the expected interface for freeboard to access
 // data.
 type DsPlugin interface {
 	// Called when new settings are given.
-	onSettingsChanged(map[string]interface{})
+	OnSettingsChanged(*js.Object)
 	// A public function we must implement
 	// that will be called when the user wants
 	// to manually refresh the datasource
-	updateNow()
+	UpdateNow()
 	// A public function we must implement that
 	// will be called when this instance of this
 	// plugin is no longer needed. Do anything
 	// you need to cleanup after yourself here.
-	onDispose()
+	OnDispose()
+	// An additional function, for sanity's sake,
+	// which should return the current internal
+	// settings object.
+	CurrentSettings() *js.Object
+}
+
+// WrapDsPlugin converts the exported function set of a DsPlugin
+// into a map consisting of the required JS function set, with
+// the other DsPlugin methods presented with lowercase leading
+// characters in the JS style. Also present is "plugin", which
+// directly references the DsPlugin object.
+func WrapDsPlugin(dsp DsPlugin) map[string]interface{} {
+	return map[string]interface{}{
+		"plugin":            dsp,
+		"updateNow":         dsp.UpdateNow,
+		"onDispose":         dsp.OnDispose,
+		"onSettingsChanged": dsp.OnSettingsChanged,
+		"currentSettings":   dsp.CurrentSettings,
+	}
+}
+
+// MakeUpdateTicker creates a goroutine that polls a DataSource's
+// UpdateNow method every few seconds (as provided). It returns a
+// channel to close when this goroutine should be stopped.
+func MakeUpdateTicker(dsp DsPlugin, seconds int) chan interface{} {
+	closeToKillUpdate := make(chan interface{})
+	go func(dsp DsPlugin, seconds int) {
+		for {
+			select {
+			case <-closeToKillUpdate:
+				return
+			case <-time.After(time.Duration(seconds) * time.Second):
+				dsp.UpdateNow()
+			}
+		}
+	}(dsp, seconds)
+	return closeToKillUpdate
 }
 
 type settingType string
@@ -156,19 +197,16 @@ type DsPluginDefinition struct {
 	// consumption by the plugin.
 	Settings []FBSetting
 
-	// NewInstance is called to create a new plugin. It is
-	// passed the calculated settings based on the definition's
-	// settings array. This should be kept by the plugin.
-	// It is also passed two special functions:
-	// * newInstanceCallback should be called at the end of NewInstance
-	//   with the new plugin. Remember may have to use js.New to construct
-	//   your new plugin from a constructor function?
-	// * updateCallback should be called with new data whenever it's
-	//   ready for freeboard. This should be kept by the new instance.
-	//NewInstance func(settings map[string]interface{}, newInstanceCallback func(DsPlugin), updateCallback func(interface{}))
-	//NewInstance func(settings map[string]interface{}, newInstanceCallback func(map[string]interface{}), updateCallback func(interface{}))
-	//NewInstance func(settings map[string]interface{}, newInstanceCallback func(*js.Object), updateCallback func(interface{}))
-	NewInstance func(settings, newInstanceCallback, updateCallback *js.Object)
+	// NewInstance is called to create a new plugin. This is the
+	// Go wrapper. It is passed the calculated settings based on
+	// the definition's settings array, as a js.Object; this should
+	// be retained. It is also passed one special function, which
+	// is a simple go wrapper around the updateCallback function
+	// given by the FreeBoard NewInstance function.
+	// Notably absent is NewInstanceCallback; this is handled under
+	// the Go layer for you. All you have to do is return the
+	// prepared DsPlugin-interfacing plugin object.
+	NewInstance func(settings *js.Object, updateCallback func(interface{})) DsPlugin
 }
 
 // ToFBInterface returns a map for FreeBoard's loadDatasourcePlugin func.
@@ -186,6 +224,10 @@ func (dsp DsPluginDefinition) ToFBInterface() map[string]interface{} {
 		settingSlice = append(settingSlice, s.ToFBInterface())
 	}
 	output["settings"] = settingSlice
-	output["newInstance"] = dsp.NewInstance
+	output["newInstance"] = func(settings, newInstanceCallback, updateCallback *js.Object) {
+		Plugin := dsp.NewInstance(settings, func(i interface{}) { updateCallback.Invoke(i) })
+		wrapper := WrapDsPlugin(Plugin)
+		newInstanceCallback.Invoke(wrapper)
+	}
 	return output
 }
