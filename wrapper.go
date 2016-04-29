@@ -53,16 +53,14 @@ func (fb *FBWrapper) IsEditing() *js.Object {
 }
 
 // LoadDatasourcePlugin accepts a datasource plugin and loads it.
-// This can be passed either a *js.Object for a JS plugin, or a
-// map defining a Go plugin; but use LoadGoDatasourcePlugin for that.
-func (fb *FBWrapper) LoadDatasourcePlugin(ds interface{}) {
+func (fb *FBWrapper) LoadDatasourcePlugin(ds *js.Object) {
 	fb.FreeboardObject.Call("loadDatasourcePlugin", ds)
 }
 
 // LoadGoDatasourcePlugin accepts a datasource plugin
 // written in Go and loads it.
 func (fb *FBWrapper) LoadGoDatasourcePlugin(ds DsPluginDefinition) {
-	fb.LoadDatasourcePlugin(ds.ToFBInterface())
+	fb.FreeboardObject.Call("loadDatasourcePlugin", ds.ToFBInterface())
 }
 
 // LoadWidgetPlugin accepts a widget plugin and loads it.

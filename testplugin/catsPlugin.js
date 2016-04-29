@@ -27664,6 +27664,12 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 		fb.FreeboardObject.initialize($externalize(allowEdit, $Bool), $externalize(finished, funcType));
 	};
 	FBWrapper.prototype.Initialize = function(allowEdit, finished) { return this.$val.Initialize(allowEdit, finished); };
+	FBWrapper.ptr.prototype.NewDashboard = function() {
+		var $ptr, fb;
+		fb = this;
+		fb.FreeboardObject.newDashboard();
+	};
+	FBWrapper.prototype.NewDashboard = function() { return this.$val.NewDashboard(); };
 	FBWrapper.ptr.prototype.Serialize = function() {
 		var $ptr, fb;
 		fb = this;
@@ -27673,27 +27679,81 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 	FBWrapper.ptr.prototype.LoadDashboard = function(serialised, callback) {
 		var $ptr, callback, fb, serialised;
 		fb = this;
-		fb.FreeboardObject.loadDashboard(serialised, $externalize(callback, funcType));
+		fb.FreeboardObject.loadDashboard(serialised, callback);
 	};
 	FBWrapper.prototype.LoadDashboard = function(serialised, callback) { return this.$val.LoadDashboard(serialised, callback); };
+	FBWrapper.ptr.prototype.SetEditing = function(editing, animate) {
+		var $ptr, animate, editing, fb;
+		fb = this;
+		fb.FreeboardObject.setEditing(editing, animate);
+	};
+	FBWrapper.prototype.SetEditing = function(editing, animate) { return this.$val.SetEditing(editing, animate); };
+	FBWrapper.ptr.prototype.IsEditing = function() {
+		var $ptr, fb;
+		fb = this;
+		return fb.FreeboardObject.isEditing();
+	};
+	FBWrapper.prototype.IsEditing = function() { return this.$val.IsEditing(); };
 	FBWrapper.ptr.prototype.LoadDatasourcePlugin = function(ds) {
+		var $ptr, ds, fb;
+		fb = this;
+		fb.FreeboardObject.loadDatasourcePlugin(ds);
+	};
+	FBWrapper.prototype.LoadDatasourcePlugin = function(ds) { return this.$val.LoadDatasourcePlugin(ds); };
+	FBWrapper.ptr.prototype.LoadGoDatasourcePlugin = function(ds) {
 		var $ptr, ds, fb;
 		ds = $clone(ds, DsPluginDefinition);
 		fb = this;
 		fb.FreeboardObject.loadDatasourcePlugin($externalize(ds.ToFBInterface(), mapType));
 	};
-	FBWrapper.prototype.LoadDatasourcePlugin = function(ds) { return this.$val.LoadDatasourcePlugin(ds); };
+	FBWrapper.prototype.LoadGoDatasourcePlugin = function(ds) { return this.$val.LoadGoDatasourcePlugin(ds); };
 	FBWrapper.ptr.prototype.LoadWidgetPlugin = function(wt) {
+		var $ptr, fb, wt;
+		fb = this;
+		fb.FreeboardObject.loadWidgetPlugin($externalize(wt, $emptyInterface));
+	};
+	FBWrapper.prototype.LoadWidgetPlugin = function(wt) { return this.$val.LoadWidgetPlugin(wt); };
+	FBWrapper.ptr.prototype.LoadGoWidgetPlugin = function(wt) {
 		var $ptr, fb, wt;
 		wt = $clone(wt, WtPluginDefinition);
 		fb = this;
-		fb.FreeboardObject.loadWidgetPlugin($externalize(wt.ToFBInterface(), mapType));
+		fb.LoadWidgetPlugin(new mapType(wt.ToFBInterface()));
 	};
-	FBWrapper.prototype.LoadWidgetPlugin = function(wt) { return this.$val.LoadWidgetPlugin(wt); };
+	FBWrapper.prototype.LoadGoWidgetPlugin = function(wt) { return this.$val.LoadGoWidgetPlugin(wt); };
+	FBWrapper.ptr.prototype.ShowLoadingIndicator = function(show) {
+		var $ptr, fb, show;
+		fb = this;
+		fb.FreeboardObject.showLoadingIndicator(show);
+	};
+	FBWrapper.prototype.ShowLoadingIndicator = function(show) { return this.$val.ShowLoadingIndicator(show); };
+	FBWrapper.ptr.prototype.ShowDialog = function(contentElement, title, okButtonTitle, cancelButtonTitle, okCallback) {
+		var $ptr, cancelButtonTitle, contentElement, fb, okButtonTitle, okCallback, title;
+		fb = this;
+		fb.FreeboardObject.showDialog($externalize(contentElement, dom.HTMLElement), $externalize(title, $String), $externalize(okButtonTitle, $String), $externalize(cancelButtonTitle, $String), $externalize(okCallback, $emptyInterface));
+	};
+	FBWrapper.prototype.ShowDialog = function(contentElement, title, okButtonTitle, cancelButtonTitle, okCallback) { return this.$val.ShowDialog(contentElement, title, okButtonTitle, cancelButtonTitle, okCallback); };
+	FBWrapper.ptr.prototype.GetDatasourceSettings = function(name) {
+		var $ptr, fb, name;
+		fb = this;
+		return fb.FreeboardObject.getDatasourceSettings($externalize(name, $String));
+	};
+	FBWrapper.prototype.GetDatasourceSettings = function(name) { return this.$val.GetDatasourceSettings(name); };
+	FBWrapper.ptr.prototype.SetDatasourceSettings = function(name, settings) {
+		var $ptr, fb, name, settings;
+		fb = this;
+		fb.FreeboardObject.setDatasourceSettings($externalize(name, $String), settings);
+	};
+	FBWrapper.prototype.SetDatasourceSettings = function(name, settings) { return this.$val.SetDatasourceSettings(name, settings); };
+	FBWrapper.ptr.prototype.On = function(eventName, callback) {
+		var $ptr, callback, eventName, fb;
+		fb = this;
+		fb.FreeboardObject.on($externalize(eventName, $String), callback);
+	};
+	FBWrapper.prototype.On = function(eventName, callback) { return this.$val.On(eventName, callback); };
 	DsPluginDefinition.methods = [{prop: "ToFBInterface", name: "ToFBInterface", pkg: "", typ: $funcType([], [mapType], false)}];
 	FBSetting.methods = [{prop: "ToFBInterface", name: "ToFBInterface", pkg: "", typ: $funcType([], [mapType], false)}];
 	WtPluginDefinition.methods = [{prop: "ToFBInterface", name: "ToFBInterface", pkg: "", typ: $funcType([], [mapType], false)}];
-	ptrType.methods = [{prop: "Initialize", name: "Initialize", pkg: "", typ: $funcType([$Bool, funcType], [], false)}, {prop: "Serialize", name: "Serialize", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "LoadDashboard", name: "LoadDashboard", pkg: "", typ: $funcType([ptrType$1, funcType], [], false)}, {prop: "LoadDatasourcePlugin", name: "LoadDatasourcePlugin", pkg: "", typ: $funcType([DsPluginDefinition], [], false)}, {prop: "LoadWidgetPlugin", name: "LoadWidgetPlugin", pkg: "", typ: $funcType([WtPluginDefinition], [], false)}];
+	ptrType.methods = [{prop: "Initialize", name: "Initialize", pkg: "", typ: $funcType([$Bool, funcType], [], false)}, {prop: "NewDashboard", name: "NewDashboard", pkg: "", typ: $funcType([], [], false)}, {prop: "Serialize", name: "Serialize", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "LoadDashboard", name: "LoadDashboard", pkg: "", typ: $funcType([ptrType$1, ptrType$1], [], false)}, {prop: "SetEditing", name: "SetEditing", pkg: "", typ: $funcType([ptrType$1, ptrType$1], [], false)}, {prop: "IsEditing", name: "IsEditing", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "LoadDatasourcePlugin", name: "LoadDatasourcePlugin", pkg: "", typ: $funcType([ptrType$1], [], false)}, {prop: "LoadGoDatasourcePlugin", name: "LoadGoDatasourcePlugin", pkg: "", typ: $funcType([DsPluginDefinition], [], false)}, {prop: "LoadWidgetPlugin", name: "LoadWidgetPlugin", pkg: "", typ: $funcType([$emptyInterface], [], false)}, {prop: "LoadGoWidgetPlugin", name: "LoadGoWidgetPlugin", pkg: "", typ: $funcType([WtPluginDefinition], [], false)}, {prop: "ShowLoadingIndicator", name: "ShowLoadingIndicator", pkg: "", typ: $funcType([ptrType$1], [], false)}, {prop: "ShowDialog", name: "ShowDialog", pkg: "", typ: $funcType([dom.HTMLElement, $String, $String, $String, $emptyInterface], [], false)}, {prop: "GetDatasourceSettings", name: "GetDatasourceSettings", pkg: "", typ: $funcType([$String], [ptrType$1], false)}, {prop: "SetDatasourceSettings", name: "SetDatasourceSettings", pkg: "", typ: $funcType([$String, ptrType$1], [], false)}, {prop: "On", name: "On", pkg: "", typ: $funcType([$String, ptrType$1], [], false)}];
 	DsPlugin.init([{prop: "CurrentSettings", name: "CurrentSettings", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "OnDispose", name: "OnDispose", pkg: "", typ: $funcType([], [], false)}, {prop: "OnSettingsChanged", name: "OnSettingsChanged", pkg: "", typ: $funcType([ptrType$1], [], false)}, {prop: "UpdateNow", name: "UpdateNow", pkg: "", typ: $funcType([], [], false)}]);
 	DsPluginDefinition.init([{prop: "TypeName", name: "TypeName", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Description", name: "Description", pkg: "", typ: $String, tag: ""}, {prop: "ExternalScripts", name: "ExternalScripts", pkg: "", typ: sliceType, tag: ""}, {prop: "Settings", name: "Settings", pkg: "", typ: sliceType$4, tag: ""}, {prop: "NewInstance", name: "NewInstance", pkg: "", typ: funcType$11, tag: ""}]);
 	FBSettingOpt.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "Value", name: "Value", pkg: "", typ: $String, tag: ""}]);
@@ -27779,7 +27839,7 @@ $packages["main"] = (function() {
 	main = function() {
 		var $ptr;
 		console.log("Registering plugin");
-		freeboard.FB.LoadDatasourcePlugin($pkg.TestDefinition);
+		freeboard.FB.LoadGoDatasourcePlugin($pkg.TestDefinition);
 	};
 	ptrType$1.methods = [{prop: "CurrentSettings", name: "CurrentSettings", pkg: "", typ: $funcType([], [ptrType], false)}, {prop: "OnSettingsChanged", name: "OnSettingsChanged", pkg: "", typ: $funcType([ptrType], [], false)}, {prop: "UpdateNow", name: "UpdateNow", pkg: "", typ: $funcType([], [], false)}, {prop: "OnDispose", name: "OnDispose", pkg: "", typ: $funcType([], [], false)}];
 	CatsPlugin.init([{prop: "UpdateFunc", name: "UpdateFunc", pkg: "", typ: funcType, tag: ""}, {prop: "settings", name: "settings", pkg: "main", typ: ptrType, tag: ""}, {prop: "closeToKillUpdate", name: "closeToKillUpdate", pkg: "main", typ: chanType, tag: ""}]);
