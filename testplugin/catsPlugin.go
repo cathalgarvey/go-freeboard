@@ -93,5 +93,5 @@ var TestDefinition = freeboard.DsPluginDefinition{
 
 func main() {
 	println("Registering plugin")
-	freeboard.LoadDatasourcePlugin(TestDefinition)
+	freeboard.FB.LoadDatasourcePlugin(TestDefinition)
 }

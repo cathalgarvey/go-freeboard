@@ -2,36 +2,43 @@ package freeboard
 
 import "github.com/gopherjs/gopherjs/js"
 
-// FreeBoard is the Freeboard JS object
-var FreeBoard *js.Object
+// FBWrapper is a wrapper for the Freeboard object.
+// Use the "FB" variable instantiated at initialisation.
+type FBWrapper struct {
+	FreeboardObject *js.Object
+}
+
+// FB is the Freeboard JS object as wrapped from the global context.
+var FB *FBWrapper
 
 func init() {
-	FreeBoard = js.Global.Get("freeboard")
+	fbobj := js.Global.Get("freeboard")
+	FB = &FBWrapper{fbobj}
 }
 
 // Initialize is called with:
 //  * allowEdit (whether to permit the board to be edited)
 //  * finished (callback when loading is finished)
-func Initialize(allowEdit bool, finished func()) {
-	FreeBoard.Call("initialize", allowEdit, finished)
+func (fb *FBWrapper) Initialize(allowEdit bool, finished func()) {
+	fb.FreeboardObject.Call("initialize", allowEdit, finished)
 }
 
 // Serialize returns a serialised object of the current board.
-func Serialize() *js.Object {
-	return FreeBoard.Call("serialize")
+func (fb *FBWrapper) Serialize() *js.Object {
+	return fb.FreeboardObject.Call("serialize")
 }
 
 // LoadDashboard accepts a serialised dashboard and a callback for when loading completes.
-func LoadDashboard(serialised *js.Object, callback func()) {
-	FreeBoard.Call("loadDashboard", serialised, callback)
+func (fb *FBWrapper) LoadDashboard(serialised *js.Object, callback func()) {
+	fb.FreeboardObject.Call("loadDashboard", serialised, callback)
 }
 
 // LoadDatasourcePlugin accepts a datasource plugin and loads it.
-func LoadDatasourcePlugin(ds DsPluginDefinition) {
-	FreeBoard.Call("loadDatasourcePlugin", ds.ToFBInterface())
+func (fb *FBWrapper) LoadDatasourcePlugin(ds DsPluginDefinition) {
+	fb.FreeboardObject.Call("loadDatasourcePlugin", ds.ToFBInterface())
 }
 
 // LoadWidgetPlugin accepts a widget plugin and loads it.
-func LoadWidgetPlugin(wt WtPluginDefinition) {
-	FreeBoard.Call("loadWidgetPlugin", wt.ToFBInterface())
+func (fb *FBWrapper) LoadWidgetPlugin(wt WtPluginDefinition) {
+	fb.FreeboardObject.Call("loadWidgetPlugin", wt.ToFBInterface())
 }
