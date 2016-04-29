@@ -66,14 +66,14 @@ func (fb *FBWrapper) LoadGoDatasourcePlugin(ds DsPluginDefinition) {
 // LoadWidgetPlugin accepts a widget plugin and loads it.
 // This can be passed either a *js.Object for a JS plugin, or a
 // map defining a Go plugin; but use LoadGoWidgetPlugin for that.
-func (fb *FBWrapper) LoadWidgetPlugin(wt interface{}) {
+func (fb *FBWrapper) LoadWidgetPlugin(wt *js.Object) {
 	fb.FreeboardObject.Call("loadWidgetPlugin", wt)
 }
 
 // LoadGoWidgetPlugin accepts a widget plugin written in Go
 // and loads it.
 func (fb *FBWrapper) LoadGoWidgetPlugin(wt WtPluginDefinition) {
-	fb.LoadWidgetPlugin(wt.ToFBInterface())
+	fb.FreeboardObject.Call("loadWidgetPlugin", wt.ToFBInterface())
 }
 
 // ShowLoadingIndicator shows or hides the loading indicator.
