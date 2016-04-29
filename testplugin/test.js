@@ -2076,7 +2076,7 @@ var $internalize = function(v, t, recv) {
 };
 
 $packages["github.com/gopherjs/gopherjs/js"] = (function() {
-	var $pkg = {}, $init, Object, Error, M, sliceType, ptrType, sliceType$2, funcType, ptrType$1, MakeWrapper, init;
+	var $pkg = {}, $init, Object, Error, sliceType, ptrType, ptrType$1, init;
 	Object = $pkg.Object = $newType(0, $kindStruct, "js.Object", "Object", "github.com/gopherjs/gopherjs/js", function(object_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -2093,11 +2093,8 @@ $packages["github.com/gopherjs/gopherjs/js"] = (function() {
 		}
 		this.Object = Object_;
 	});
-	M = $pkg.M = $newType(4, $kindMap, "js.M", "M", "github.com/gopherjs/gopherjs/js", null);
 	sliceType = $sliceType($emptyInterface);
 	ptrType = $ptrType(Object);
-	sliceType$2 = $sliceType(ptrType);
-	funcType = $funcType([sliceType$2], [ptrType], true);
 	ptrType$1 = $ptrType(Error);
 	Object.ptr.prototype.Get = function(key) {
 		var $ptr, key, o;
@@ -2213,30 +2210,6 @@ $packages["github.com/gopherjs/gopherjs/js"] = (function() {
 		return $internalize(err.Object.stack, $String);
 	};
 	Error.prototype.Stack = function() { return this.$val.Stack(); };
-	MakeWrapper = function(i) {
-		var $ptr, i, i$1, m, methods, o, v;
-		v = i;
-		o = new ($global.Object)();
-		o.__internal_object__ = v;
-		methods = v.constructor.methods;
-		i$1 = 0;
-		while (true) {
-			if (!(i$1 < $parseInt(methods.length))) { break; }
-			m = [m];
-			m[0] = methods[i$1];
-			if (!($internalize(m[0].pkg, $String) === "")) {
-				i$1 = i$1 + (1) >> 0;
-				continue;
-			}
-			o[$externalize($internalize(m[0].name, $String), $String)] = $externalize((function(m) { return function(args) {
-				var $ptr, args;
-				return $externalizeFunction(v[$externalize($internalize(m[0].prop, $String), $String)], m[0].typ, $externalize(true, $Bool)).apply(v, $externalize(args, sliceType$2));
-			}; })(m), funcType);
-			i$1 = i$1 + (1) >> 0;
-		}
-		return o;
-	};
-	$pkg.MakeWrapper = MakeWrapper;
 	init = function() {
 		var $ptr, e;
 		e = new Error.ptr(null);
@@ -2245,7 +2218,6 @@ $packages["github.com/gopherjs/gopherjs/js"] = (function() {
 	ptrType$1.methods = [{prop: "Error", name: "Error", pkg: "", typ: $funcType([], [$String], false)}, {prop: "Stack", name: "Stack", pkg: "", typ: $funcType([], [$String], false)}];
 	Object.init([{prop: "object", name: "object", pkg: "github.com/gopherjs/gopherjs/js", typ: ptrType, tag: ""}]);
 	Error.init([{prop: "Object", name: "", pkg: "", typ: ptrType, tag: ""}]);
-	M.init($String, $emptyInterface);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -3512,13 +3484,33 @@ $packages["syscall"] = (function() {
 	return $pkg;
 })();
 $packages["time"] = (function() {
-	var $pkg = {}, $init, errors, js, nosync, runtime, strings, syscall, ParseError, Time, Month, Weekday, Duration, Location, zone, zoneTrans, sliceType, sliceType$1, ptrType, sliceType$2, structType, arrayType, sliceType$3, arrayType$1, arrayType$2, ptrType$1, arrayType$4, ptrType$3, ptrType$6, std0x, longDayNames, shortDayNames, shortMonthNames, longMonthNames, atoiError, errBad, errLeadingInt, months, days, daysBefore, utcLoc, utcLoc$24ptr, localLoc, localLoc$24ptr, localOnce, zoneinfo, badData, zoneDirs, _tuple, _r, init, initLocal, Sleep, startsWithLowerCase, nextStdChunk, match, lookup, appendInt, atoi, formatNano, quote, isDigit, getnum, cutspace, skip, Parse, parse, parseTimeZone, parseGMT, parseNanoseconds, leadingInt, absWeekday, absClock, fmtFrac, fmtInt, absDate, daysIn, Unix, isLeap, norm, Date, div, FixedZone;
+	var $pkg = {}, $init, errors, js, nosync, runtime, strings, syscall, runtimeTimer, ParseError, Timer, Time, Month, Weekday, Duration, Location, zone, zoneTrans, sliceType, sliceType$1, ptrType, sliceType$2, arrayType, sliceType$3, arrayType$1, arrayType$2, ptrType$1, chanType, arrayType$4, funcType$1, ptrType$2, ptrType$3, ptrType$4, chanType$1, ptrType$6, std0x, longDayNames, shortDayNames, shortMonthNames, longMonthNames, atoiError, errBad, errLeadingInt, months, days, daysBefore, utcLoc, utcLoc$24ptr, localLoc, localLoc$24ptr, localOnce, zoneinfo, badData, zoneDirs, _tuple, _r, init, initLocal, runtimeNano, now, startTimer, stopTimer, startsWithLowerCase, nextStdChunk, match, lookup, appendInt, atoi, formatNano, quote, isDigit, getnum, cutspace, skip, Parse, parse, parseTimeZone, parseGMT, parseNanoseconds, leadingInt, when, NewTimer, sendTime, After, absWeekday, absClock, fmtFrac, fmtInt, absDate, daysIn, Now, Unix, isLeap, norm, Date, div, FixedZone;
 	errors = $packages["errors"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	nosync = $packages["github.com/gopherjs/gopherjs/nosync"];
 	runtime = $packages["runtime"];
 	strings = $packages["strings"];
 	syscall = $packages["syscall"];
+	runtimeTimer = $pkg.runtimeTimer = $newType(0, $kindStruct, "time.runtimeTimer", "runtimeTimer", "time", function(i_, when_, period_, f_, arg_, timeout_, active_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.i = 0;
+			this.when = new $Int64(0, 0);
+			this.period = new $Int64(0, 0);
+			this.f = $throwNilPointerError;
+			this.arg = $ifaceNil;
+			this.timeout = null;
+			this.active = false;
+			return;
+		}
+		this.i = i_;
+		this.when = when_;
+		this.period = period_;
+		this.f = f_;
+		this.arg = arg_;
+		this.timeout = timeout_;
+		this.active = active_;
+	});
 	ParseError = $pkg.ParseError = $newType(0, $kindStruct, "time.ParseError", "ParseError", "time", function(Layout_, Value_, LayoutElem_, ValueElem_, Message_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -3534,6 +3526,16 @@ $packages["time"] = (function() {
 		this.LayoutElem = LayoutElem_;
 		this.ValueElem = ValueElem_;
 		this.Message = Message_;
+	});
+	Timer = $pkg.Timer = $newType(0, $kindStruct, "time.Timer", "Timer", "time", function(C_, r_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.C = $chanNil;
+			this.r = new runtimeTimer.ptr(0, new $Int64(0, 0), new $Int64(0, 0), $throwNilPointerError, $ifaceNil, null, false);
+			return;
+		}
+		this.C = C_;
+		this.r = r_;
 	});
 	Time = $pkg.Time = $newType(0, $kindStruct, "time.Time", "Time", "time", function(sec_, nsec_, loc_) {
 		this.$val = this;
@@ -3598,14 +3600,18 @@ $packages["time"] = (function() {
 	sliceType$1 = $sliceType(zoneTrans);
 	ptrType = $ptrType(zone);
 	sliceType$2 = $sliceType($String);
-	structType = $structType([]);
 	arrayType = $arrayType($Uint8, 20);
 	sliceType$3 = $sliceType($Uint8);
 	arrayType$1 = $arrayType($Uint8, 9);
 	arrayType$2 = $arrayType($Uint8, 64);
 	ptrType$1 = $ptrType(Location);
+	chanType = $chanType(Time, false, false);
 	arrayType$4 = $arrayType($Uint8, 32);
+	funcType$1 = $funcType([$emptyInterface, $Uintptr], [], false);
+	ptrType$2 = $ptrType(js.Object);
 	ptrType$3 = $ptrType(ParseError);
+	ptrType$4 = $ptrType(Timer);
+	chanType$1 = $chanType(Time, false, true);
 	ptrType$6 = $ptrType(Time);
 	init = function() {
 		var $ptr;
@@ -3624,20 +3630,48 @@ $packages["time"] = (function() {
 		localLoc.name = s.substring((i + 1 >> 0), j);
 		localLoc.zone = new sliceType([new zone.ptr(localLoc.name, $imul(($parseInt(d.getTimezoneOffset()) >> 0), -60), false)]);
 	};
-	Sleep = function(d) {
-		var $ptr, _r$1, c, d, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$1 = $f._r$1; c = $f.c; d = $f.d; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		c = [c];
-		c[0] = new $Chan(structType, 0);
-		$setTimeout((function(c) { return function() {
-			var $ptr;
-			$close(c[0]);
-		}; })(c), ((x = $div64(d, new Duration(0, 1000000), false), x.$low + ((x.$high >> 31) * 4294967296)) >> 0));
-		_r$1 = $recv(c[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_r$1[0];
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Sleep }; } $f.$ptr = $ptr; $f._r$1 = _r$1; $f.c = c; $f.d = d; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	runtimeNano = function() {
+		var $ptr;
+		return $mul64($internalize(new ($global.Date)().getTime(), $Int64), new $Int64(0, 1000000));
 	};
-	$pkg.Sleep = Sleep;
+	now = function() {
+		var $ptr, _tmp, _tmp$1, n, nsec, sec, x;
+		sec = new $Int64(0, 0);
+		nsec = 0;
+		n = runtimeNano();
+		_tmp = $div64(n, new $Int64(0, 1000000000), false);
+		_tmp$1 = ((x = $div64(n, new $Int64(0, 1000000000), true), x.$low + ((x.$high >> 31) * 4294967296)) >> 0);
+		sec = _tmp;
+		nsec = _tmp$1;
+		return [sec, nsec];
+	};
+	startTimer = function(t) {
+		var $ptr, diff, t, x, x$1;
+		t.active = true;
+		diff = $div64(((x = t.when, x$1 = runtimeNano(), new $Int64(x.$high - x$1.$high, x.$low - x$1.$low))), new $Int64(0, 1000000), false);
+		if ((diff.$high > 0 || (diff.$high === 0 && diff.$low > 2147483647))) {
+			return;
+		}
+		if ((diff.$high < 0 || (diff.$high === 0 && diff.$low < 0))) {
+			diff = new $Int64(0, 0);
+		}
+		t.timeout = $setTimeout((function() {
+			var $ptr, x$2, x$3, x$4;
+			t.active = false;
+			$go(t.f, [t.arg, 0]);
+			if (!((x$2 = t.period, (x$2.$high === 0 && x$2.$low === 0)))) {
+				t.when = (x$3 = t.when, x$4 = t.period, new $Int64(x$3.$high + x$4.$high, x$3.$low + x$4.$low));
+				startTimer(t);
+			}
+		}), $externalize(new $Int64(diff.$high + 0, diff.$low + 1), $Int64));
+	};
+	stopTimer = function(t) {
+		var $ptr, t, wasActive;
+		$global.clearTimeout(t.timeout);
+		wasActive = t.active;
+		t.active = false;
+		return wasActive;
+	};
 	startsWithLowerCase = function(str) {
 		var $ptr, c, str;
 		if (str.length === 0) {
@@ -4910,6 +4944,61 @@ $packages["time"] = (function() {
 		err = _tmp$8;
 		return [x, rem, err];
 	};
+	when = function(d) {
+		var $ptr, d, t, x, x$1;
+		if ((d.$high < 0 || (d.$high === 0 && d.$low <= 0))) {
+			return runtimeNano();
+		}
+		t = (x = runtimeNano(), x$1 = new $Int64(d.$high, d.$low), new $Int64(x.$high + x$1.$high, x.$low + x$1.$low));
+		if ((t.$high < 0 || (t.$high === 0 && t.$low < 0))) {
+			t = new $Int64(2147483647, 4294967295);
+		}
+		return t;
+	};
+	Timer.ptr.prototype.Stop = function() {
+		var $ptr, t;
+		t = this;
+		if (t.r.f === $throwNilPointerError) {
+			$panic(new $String("time: Stop called on uninitialized Timer"));
+		}
+		return stopTimer(t.r);
+	};
+	Timer.prototype.Stop = function() { return this.$val.Stop(); };
+	NewTimer = function(d) {
+		var $ptr, c, d, t;
+		c = new $Chan(Time, 1);
+		t = new Timer.ptr(c, new runtimeTimer.ptr(0, when(d), new $Int64(0, 0), sendTime, new chanType(c), null, false));
+		startTimer(t.r);
+		return t;
+	};
+	$pkg.NewTimer = NewTimer;
+	Timer.ptr.prototype.Reset = function(d) {
+		var $ptr, active, d, t, w;
+		t = this;
+		if (t.r.f === $throwNilPointerError) {
+			$panic(new $String("time: Reset called on uninitialized Timer"));
+		}
+		w = when(d);
+		active = stopTimer(t.r);
+		t.r.when = w;
+		startTimer(t.r);
+		return active;
+	};
+	Timer.prototype.Reset = function(d) { return this.$val.Reset(d); };
+	sendTime = function(c, seq) {
+		var $ptr, _selection, c, seq, $r;
+		/* */ var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _selection = $f._selection; c = $f.c; seq = $f.seq; $r = $f.$r; }
+		_selection = $select([[$assertType(c, chanType), $clone(Now(), Time)], []]);
+		if (_selection[0] === 0) {
+		} else if (_selection[0] === 1) {
+		}
+		/* */ if ($f === undefined) { $f = { $blk: sendTime }; } $f.$ptr = $ptr; $f._selection = _selection; $f.c = c; $f.seq = seq; $f.$r = $r; return $f;
+	};
+	After = function(d) {
+		var $ptr, d;
+		return NewTimer(d).C;
+	};
+	$pkg.After = After;
 	Time.ptr.prototype.After = function(u) {
 		var $ptr, t, u, x, x$1, x$2, x$3;
 		u = $clone(u, Time);
@@ -5458,6 +5547,14 @@ $packages["time"] = (function() {
 		}
 		return ((((m < 0 || m >= daysBefore.length) ? $throwRuntimeError("index out of range") : daysBefore[m]) - (x = m - 1 >> 0, ((x < 0 || x >= daysBefore.length) ? $throwRuntimeError("index out of range") : daysBefore[x])) >> 0) >> 0);
 	};
+	Now = function() {
+		var $ptr, _tuple$1, nsec, sec;
+		_tuple$1 = now();
+		sec = _tuple$1[0];
+		nsec = _tuple$1[1];
+		return new Time.ptr(new $Int64(sec.$high + 14, sec.$low + 2006054656), nsec, $pkg.Local);
+	};
+	$pkg.Now = Now;
 	Time.ptr.prototype.UTC = function() {
 		var $ptr, t;
 		t = $clone(this, Time);
@@ -6077,13 +6174,16 @@ $packages["time"] = (function() {
 	};
 	Location.prototype.lookupName = function(name, unix) { return this.$val.lookupName(name, unix); };
 	ptrType$3.methods = [{prop: "Error", name: "Error", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$4.methods = [{prop: "Stop", name: "Stop", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "Reset", name: "Reset", pkg: "", typ: $funcType([Duration], [$Bool], false)}];
 	Time.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}, {prop: "Format", name: "Format", pkg: "", typ: $funcType([$String], [$String], false)}, {prop: "AppendFormat", name: "AppendFormat", pkg: "", typ: $funcType([sliceType$3, $String], [sliceType$3], false)}, {prop: "After", name: "After", pkg: "", typ: $funcType([Time], [$Bool], false)}, {prop: "Before", name: "Before", pkg: "", typ: $funcType([Time], [$Bool], false)}, {prop: "Equal", name: "Equal", pkg: "", typ: $funcType([Time], [$Bool], false)}, {prop: "IsZero", name: "IsZero", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "abs", name: "abs", pkg: "time", typ: $funcType([], [$Uint64], false)}, {prop: "locabs", name: "locabs", pkg: "time", typ: $funcType([], [$String, $Int, $Uint64], false)}, {prop: "Date", name: "Date", pkg: "", typ: $funcType([], [$Int, Month, $Int], false)}, {prop: "Year", name: "Year", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Month", name: "Month", pkg: "", typ: $funcType([], [Month], false)}, {prop: "Day", name: "Day", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Weekday", name: "Weekday", pkg: "", typ: $funcType([], [Weekday], false)}, {prop: "ISOWeek", name: "ISOWeek", pkg: "", typ: $funcType([], [$Int, $Int], false)}, {prop: "Clock", name: "Clock", pkg: "", typ: $funcType([], [$Int, $Int, $Int], false)}, {prop: "Hour", name: "Hour", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Minute", name: "Minute", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Second", name: "Second", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Nanosecond", name: "Nanosecond", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "YearDay", name: "YearDay", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Add", name: "Add", pkg: "", typ: $funcType([Duration], [Time], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Time], [Duration], false)}, {prop: "AddDate", name: "AddDate", pkg: "", typ: $funcType([$Int, $Int, $Int], [Time], false)}, {prop: "date", name: "date", pkg: "time", typ: $funcType([$Bool], [$Int, Month, $Int, $Int], false)}, {prop: "UTC", name: "UTC", pkg: "", typ: $funcType([], [Time], false)}, {prop: "Local", name: "Local", pkg: "", typ: $funcType([], [Time], false)}, {prop: "In", name: "In", pkg: "", typ: $funcType([ptrType$1], [Time], false)}, {prop: "Location", name: "Location", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "Zone", name: "Zone", pkg: "", typ: $funcType([], [$String, $Int], false)}, {prop: "Unix", name: "Unix", pkg: "", typ: $funcType([], [$Int64], false)}, {prop: "UnixNano", name: "UnixNano", pkg: "", typ: $funcType([], [$Int64], false)}, {prop: "MarshalBinary", name: "MarshalBinary", pkg: "", typ: $funcType([], [sliceType$3, $error], false)}, {prop: "GobEncode", name: "GobEncode", pkg: "", typ: $funcType([], [sliceType$3, $error], false)}, {prop: "MarshalJSON", name: "MarshalJSON", pkg: "", typ: $funcType([], [sliceType$3, $error], false)}, {prop: "MarshalText", name: "MarshalText", pkg: "", typ: $funcType([], [sliceType$3, $error], false)}, {prop: "Truncate", name: "Truncate", pkg: "", typ: $funcType([Duration], [Time], false)}, {prop: "Round", name: "Round", pkg: "", typ: $funcType([Duration], [Time], false)}];
 	ptrType$6.methods = [{prop: "UnmarshalBinary", name: "UnmarshalBinary", pkg: "", typ: $funcType([sliceType$3], [$error], false)}, {prop: "GobDecode", name: "GobDecode", pkg: "", typ: $funcType([sliceType$3], [$error], false)}, {prop: "UnmarshalJSON", name: "UnmarshalJSON", pkg: "", typ: $funcType([sliceType$3], [$error], false)}, {prop: "UnmarshalText", name: "UnmarshalText", pkg: "", typ: $funcType([sliceType$3], [$error], false)}];
 	Month.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
 	Weekday.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
 	Duration.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}, {prop: "Nanoseconds", name: "Nanoseconds", pkg: "", typ: $funcType([], [$Int64], false)}, {prop: "Seconds", name: "Seconds", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Minutes", name: "Minutes", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Hours", name: "Hours", pkg: "", typ: $funcType([], [$Float64], false)}];
 	ptrType$1.methods = [{prop: "get", name: "get", pkg: "time", typ: $funcType([], [ptrType$1], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}, {prop: "lookup", name: "lookup", pkg: "time", typ: $funcType([$Int64], [$String, $Int, $Bool, $Int64, $Int64], false)}, {prop: "lookupFirstZone", name: "lookupFirstZone", pkg: "time", typ: $funcType([], [$Int], false)}, {prop: "firstZoneUsed", name: "firstZoneUsed", pkg: "time", typ: $funcType([], [$Bool], false)}, {prop: "lookupName", name: "lookupName", pkg: "time", typ: $funcType([$String, $Int64], [$Int, $Bool, $Bool], false)}];
+	runtimeTimer.init([{prop: "i", name: "i", pkg: "time", typ: $Int32, tag: ""}, {prop: "when", name: "when", pkg: "time", typ: $Int64, tag: ""}, {prop: "period", name: "period", pkg: "time", typ: $Int64, tag: ""}, {prop: "f", name: "f", pkg: "time", typ: funcType$1, tag: ""}, {prop: "arg", name: "arg", pkg: "time", typ: $emptyInterface, tag: ""}, {prop: "timeout", name: "timeout", pkg: "time", typ: ptrType$2, tag: ""}, {prop: "active", name: "active", pkg: "time", typ: $Bool, tag: ""}]);
 	ParseError.init([{prop: "Layout", name: "Layout", pkg: "", typ: $String, tag: ""}, {prop: "Value", name: "Value", pkg: "", typ: $String, tag: ""}, {prop: "LayoutElem", name: "LayoutElem", pkg: "", typ: $String, tag: ""}, {prop: "ValueElem", name: "ValueElem", pkg: "", typ: $String, tag: ""}, {prop: "Message", name: "Message", pkg: "", typ: $String, tag: ""}]);
+	Timer.init([{prop: "C", name: "C", pkg: "", typ: chanType$1, tag: ""}, {prop: "r", name: "r", pkg: "time", typ: runtimeTimer, tag: ""}]);
 	Time.init([{prop: "sec", name: "sec", pkg: "time", typ: $Int64, tag: ""}, {prop: "nsec", name: "nsec", pkg: "time", typ: $Int32, tag: ""}, {prop: "loc", name: "loc", pkg: "time", typ: ptrType$1, tag: ""}]);
 	Location.init([{prop: "name", name: "name", pkg: "time", typ: $String, tag: ""}, {prop: "zone", name: "zone", pkg: "time", typ: sliceType, tag: ""}, {prop: "tx", name: "tx", pkg: "time", typ: sliceType$1, tag: ""}, {prop: "cacheStart", name: "cacheStart", pkg: "time", typ: $Int64, tag: ""}, {prop: "cacheEnd", name: "cacheEnd", pkg: "time", typ: $Int64, tag: ""}, {prop: "cacheZone", name: "cacheZone", pkg: "time", typ: ptrType, tag: ""}]);
 	zone.init([{prop: "name", name: "name", pkg: "time", typ: $String, tag: ""}, {prop: "offset", name: "offset", pkg: "time", typ: $Int, tag: ""}, {prop: "isDST", name: "isDST", pkg: "time", typ: $Bool, tag: ""}]);
@@ -6141,7 +6241,7 @@ $packages["honnef.co/go/js/dom"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
-	var $pkg = {}, $init, js, dom, settingType, FBSettingOpt, FBSettingSet, FBSetting, DsPluginDefinition, mapType, sliceType, mapType$1, sliceType$1, ptrType, funcType, sliceType$2, sliceType$3, sliceType$4, sliceType$5, init, LoadDatasourcePlugin;
+	var $pkg = {}, $init, js, dom, settingType, FBSettingOpt, FBSettingSet, FBSetting, DsPluginDefinition, mapType, sliceType, sliceType$1, mapType$1, sliceType$2, ptrType, funcType, sliceType$3, sliceType$4, sliceType$5, init, LoadDatasourcePlugin;
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	dom = $packages["honnef.co/go/js/dom"];
 	settingType = $pkg.settingType = $newType(8, $kindString, "freeboard.settingType", "settingType", "github.com/cathalgarvey/go-freeboard", null);
@@ -6167,17 +6267,18 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 		this.DisplayName = DisplayName_;
 		this.Type = Type_;
 	});
-	FBSetting = $pkg.FBSetting = $newType(0, $kindStruct, "freeboard.FBSetting", "FBSetting", "github.com/cathalgarvey/go-freeboard", function(Name_, DisplayName_, Description_, Type_, Options_, Settings_, DefaultStringValue_, DefaultIntValue_) {
+	FBSetting = $pkg.FBSetting = $newType(0, $kindStruct, "freeboard.FBSetting", "FBSetting", "github.com/cathalgarvey/go-freeboard", function(Name_, DisplayName_, Description_, Type_, Options_, Settings_, DefaultStringValue_, DefaultIntValue_, DefaultFloatValue_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.Name = "";
 			this.DisplayName = "";
 			this.Description = "";
 			this.Type = "";
-			this.Options = sliceType$2.nil;
-			this.Settings = sliceType$3.nil;
+			this.Options = sliceType$3.nil;
+			this.Settings = sliceType$4.nil;
 			this.DefaultStringValue = "";
 			this.DefaultIntValue = 0;
+			this.DefaultFloatValue = 0;
 			return;
 		}
 		this.Name = Name_;
@@ -6188,6 +6289,7 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 		this.Settings = Settings_;
 		this.DefaultStringValue = DefaultStringValue_;
 		this.DefaultIntValue = DefaultIntValue_;
+		this.DefaultFloatValue = DefaultFloatValue_;
 	});
 	DsPluginDefinition = $pkg.DsPluginDefinition = $newType(0, $kindStruct, "freeboard.DsPluginDefinition", "DsPluginDefinition", "github.com/cathalgarvey/go-freeboard", function(TypeName_, DisplayName_, Description_, ExternalScripts_, Settings_, NewInstance_) {
 		this.$val = this;
@@ -6195,7 +6297,7 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 			this.TypeName = "";
 			this.DisplayName = "";
 			this.Description = "";
-			this.ExternalScripts = sliceType$4.nil;
+			this.ExternalScripts = sliceType$1.nil;
 			this.Settings = sliceType$5.nil;
 			this.NewInstance = $throwNilPointerError;
 			return;
@@ -6209,16 +6311,16 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 	});
 	mapType = $mapType($String, $String);
 	sliceType = $sliceType(mapType);
+	sliceType$1 = $sliceType($String);
 	mapType$1 = $mapType($String, $emptyInterface);
-	sliceType$1 = $sliceType(mapType$1);
+	sliceType$2 = $sliceType(mapType$1);
 	ptrType = $ptrType(js.Object);
 	funcType = $funcType([ptrType, ptrType, ptrType], [], false);
-	sliceType$2 = $sliceType(FBSettingOpt);
-	sliceType$3 = $sliceType(FBSettingSet);
-	sliceType$4 = $sliceType($String);
+	sliceType$3 = $sliceType(FBSettingOpt);
+	sliceType$4 = $sliceType(FBSettingSet);
 	sliceType$5 = $sliceType(FBSetting);
 	FBSetting.ptr.prototype.ToFBInterface = function() {
-		var $ptr, _1, _entry, _entry$1, _i, _i$1, _key, _key$1, _key$10, _key$11, _key$12, _key$13, _key$14, _key$15, _key$2, _key$3, _key$4, _key$5, _key$6, _key$7, _key$8, _key$9, _ref, _ref$1, o, opt, output, s, set, st;
+		var $ptr, _1, _entry, _entry$1, _i, _i$1, _key, _key$1, _key$10, _key$11, _key$12, _key$13, _key$14, _key$15, _key$16, _key$17, _key$2, _key$3, _key$4, _key$5, _key$6, _key$7, _key$8, _key$9, _ref, _ref$1, o, opt, output, s, set, st;
 		set = $clone(this, FBSetting);
 		output = {};
 		_key = "name"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: new $String(set.Name) };
@@ -6232,35 +6334,43 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 			} else if (!((set.DefaultIntValue === 0))) {
 				_key$5 = "default_value"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$5)] = { k: _key$5, v: new $Int(set.DefaultIntValue) };
 			}
+		} else if (_1 === ($pkg.SettingNumberType)) {
+			if (!((set.DefaultIntValue === 0)) && (set.DefaultFloatValue === 0)) {
+				_key$6 = "default_value"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$6)] = { k: _key$6, v: new $Int(set.DefaultIntValue) };
+			} else if (!((set.DefaultFloatValue === 0)) && (set.DefaultIntValue === 0)) {
+				_key$7 = "default_value"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$7)] = { k: _key$7, v: new $Float64(set.DefaultFloatValue) };
+			} else if (!((set.DefaultIntValue === 0)) && !((set.DefaultFloatValue === 0))) {
+				$panic(new $String("Cannot have defaults for both int and float numeric values."));
+			}
 		} else if (_1 === ($pkg.SettingOptionType)) {
-			_key$6 = "options"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$6)] = { k: _key$6, v: $makeSlice(sliceType, 0, set.Options.$length) };
+			_key$8 = "options"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$8)] = { k: _key$8, v: $makeSlice(sliceType, 0, set.Options.$length) };
 			_ref = set.Options;
 			_i = 0;
 			while (true) {
 				if (!(_i < _ref.$length)) { break; }
 				opt = $clone(((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]), FBSettingOpt);
 				o = {};
-				_key$7 = "name"; (o || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$7)] = { k: _key$7, v: opt.Name };
+				_key$9 = "name"; (o || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$9)] = { k: _key$9, v: opt.Name };
 				if (!(opt.Value === "")) {
-					_key$8 = "value"; (o || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$8)] = { k: _key$8, v: opt.Value };
+					_key$10 = "value"; (o || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$10)] = { k: _key$10, v: opt.Value };
 				} else {
-					_key$9 = "value"; (o || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$9)] = { k: _key$9, v: opt.Name };
+					_key$11 = "value"; (o || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$11)] = { k: _key$11, v: opt.Name };
 				}
-				_key$10 = "options"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$10)] = { k: _key$10, v: $append($assertType((_entry = output[$String.keyFor("options")], _entry !== undefined ? _entry.v : $ifaceNil), sliceType), o) };
+				_key$12 = "options"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$12)] = { k: _key$12, v: $append($assertType((_entry = output[$String.keyFor("options")], _entry !== undefined ? _entry.v : $ifaceNil), sliceType), o) };
 				_i++;
 			}
 		} else if (_1 === ($pkg.SettingArrayType)) {
-			_key$11 = "settings"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$11)] = { k: _key$11, v: $makeSlice(sliceType, 0, set.Settings.$length) };
+			_key$13 = "settings"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$13)] = { k: _key$13, v: $makeSlice(sliceType, 0, set.Settings.$length) };
 			_ref$1 = set.Settings;
 			_i$1 = 0;
 			while (true) {
 				if (!(_i$1 < _ref$1.$length)) { break; }
 				st = $clone(((_i$1 < 0 || _i$1 >= _ref$1.$length) ? $throwRuntimeError("index out of range") : _ref$1.$array[_ref$1.$offset + _i$1]), FBSettingSet);
 				s = {};
-				_key$12 = "name"; (s || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$12)] = { k: _key$12, v: st.Name };
-				_key$13 = "display_name"; (s || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$13)] = { k: _key$13, v: st.DisplayName };
-				_key$14 = "type"; (s || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$14)] = { k: _key$14, v: st.Type };
-				_key$15 = "settings"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$15)] = { k: _key$15, v: $append($assertType((_entry$1 = output[$String.keyFor("settings")], _entry$1 !== undefined ? _entry$1.v : $ifaceNil), sliceType), s) };
+				_key$14 = "name"; (s || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$14)] = { k: _key$14, v: st.Name };
+				_key$15 = "display_name"; (s || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$15)] = { k: _key$15, v: st.DisplayName };
+				_key$16 = "type"; (s || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$16)] = { k: _key$16, v: st.Type };
+				_key$17 = "settings"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$17)] = { k: _key$17, v: $append($assertType((_entry$1 = output[$String.keyFor("settings")], _entry$1 !== undefined ? _entry$1.v : $ifaceNil), sliceType), s) };
 				_i$1++;
 			}
 		} else {
@@ -6276,8 +6386,10 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 		_key = "type_name"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: new $String(dsp.TypeName) };
 		_key$1 = "display_name"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: new $String(dsp.DisplayName) };
 		_key$2 = "description"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$2)] = { k: _key$2, v: new $String(dsp.Description) };
-		_key$3 = "external_scripts"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$3)] = { k: _key$3, v: dsp.ExternalScripts };
-		settingSlice = $makeSlice(sliceType$1, 0, dsp.Settings.$length);
+		if (!(dsp.ExternalScripts === sliceType$1.nil) && dsp.ExternalScripts.$length > 0) {
+			_key$3 = "external_scripts"; (output || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$3)] = { k: _key$3, v: dsp.ExternalScripts };
+		}
+		settingSlice = $makeSlice(sliceType$2, 0, dsp.Settings.$length);
 		_ref = dsp.Settings;
 		_i = 0;
 		while (true) {
@@ -6298,15 +6410,15 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 	LoadDatasourcePlugin = function(ds) {
 		var $ptr, ds;
 		ds = $clone(ds, DsPluginDefinition);
-		$pkg.FreeBoard.loadDatasourcePlugin($externalize(ds.ToFBInterface(), js.M));
+		$pkg.FreeBoard.loadDatasourcePlugin($externalize(ds.ToFBInterface(), mapType$1));
 	};
 	$pkg.LoadDatasourcePlugin = LoadDatasourcePlugin;
 	FBSetting.methods = [{prop: "ToFBInterface", name: "ToFBInterface", pkg: "", typ: $funcType([], [mapType$1], false)}];
-	DsPluginDefinition.methods = [{prop: "ToFBInterface", name: "ToFBInterface", pkg: "", typ: $funcType([], [js.M], false)}];
+	DsPluginDefinition.methods = [{prop: "ToFBInterface", name: "ToFBInterface", pkg: "", typ: $funcType([], [mapType$1], false)}];
 	FBSettingOpt.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "Value", name: "Value", pkg: "", typ: $String, tag: ""}]);
 	FBSettingSet.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Type", name: "Type", pkg: "", typ: settingType, tag: ""}]);
-	FBSetting.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Description", name: "Description", pkg: "", typ: $String, tag: ""}, {prop: "Type", name: "Type", pkg: "", typ: settingType, tag: ""}, {prop: "Options", name: "Options", pkg: "", typ: sliceType$2, tag: ""}, {prop: "Settings", name: "Settings", pkg: "", typ: sliceType$3, tag: ""}, {prop: "DefaultStringValue", name: "DefaultStringValue", pkg: "", typ: $String, tag: ""}, {prop: "DefaultIntValue", name: "DefaultIntValue", pkg: "", typ: $Int, tag: ""}]);
-	DsPluginDefinition.init([{prop: "TypeName", name: "TypeName", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Description", name: "Description", pkg: "", typ: $String, tag: ""}, {prop: "ExternalScripts", name: "ExternalScripts", pkg: "", typ: sliceType$4, tag: ""}, {prop: "Settings", name: "Settings", pkg: "", typ: sliceType$5, tag: ""}, {prop: "NewInstance", name: "NewInstance", pkg: "", typ: funcType, tag: ""}]);
+	FBSetting.init([{prop: "Name", name: "Name", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Description", name: "Description", pkg: "", typ: $String, tag: ""}, {prop: "Type", name: "Type", pkg: "", typ: settingType, tag: ""}, {prop: "Options", name: "Options", pkg: "", typ: sliceType$3, tag: ""}, {prop: "Settings", name: "Settings", pkg: "", typ: sliceType$4, tag: ""}, {prop: "DefaultStringValue", name: "DefaultStringValue", pkg: "", typ: $String, tag: ""}, {prop: "DefaultIntValue", name: "DefaultIntValue", pkg: "", typ: $Int, tag: ""}, {prop: "DefaultFloatValue", name: "DefaultFloatValue", pkg: "", typ: $Float64, tag: ""}]);
+	DsPluginDefinition.init([{prop: "TypeName", name: "TypeName", pkg: "", typ: $String, tag: ""}, {prop: "DisplayName", name: "DisplayName", pkg: "", typ: $String, tag: ""}, {prop: "Description", name: "Description", pkg: "", typ: $String, tag: ""}, {prop: "ExternalScripts", name: "ExternalScripts", pkg: "", typ: sliceType$1, tag: ""}, {prop: "Settings", name: "Settings", pkg: "", typ: sliceType$5, tag: ""}, {prop: "NewInstance", name: "NewInstance", pkg: "", typ: funcType, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -6314,6 +6426,7 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 		$r = dom.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$pkg.FreeBoard = null;
 		$pkg.SettingTextType = "text";
+		$pkg.SettingNumberType = "number";
 		$pkg.SettingCalculatedType = "calculated";
 		$pkg.SettingOptionType = "option";
 		$pkg.SettingArrayType = "array";
@@ -6324,28 +6437,35 @@ $packages["github.com/cathalgarvey/go-freeboard"] = (function() {
 	return $pkg;
 })();
 $packages["main"] = (function() {
-	var $pkg = {}, $init, freeboard, js, time, TestPlugin, sliceType, sliceType$1, sliceType$2, sliceType$3, sliceType$4, ptrType, ptrType$1, funcType, cons, init, pr, main;
+	var $pkg = {}, $init, freeboard, js, time, TestPlugin, sliceType, sliceType$1, sliceType$2, sliceType$3, funcType, ptrType, funcType$1, mapType, sliceType$4, mapType$1, ptrType$1, funcType$2, chanType, cons, init, pr, main;
 	freeboard = $packages["github.com/cathalgarvey/go-freeboard"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	time = $packages["time"];
-	TestPlugin = $pkg.TestPlugin = $newType(0, $kindStruct, "main.TestPlugin", "TestPlugin", "main", function(UpdateFunc_, settings_) {
+	TestPlugin = $pkg.TestPlugin = $newType(0, $kindStruct, "main.TestPlugin", "TestPlugin", "main", function(UpdateFunc_, settings_, closeToKillUpdate_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.UpdateFunc = $throwNilPointerError;
 			this.settings = null;
+			this.closeToKillUpdate = $chanNil;
 			return;
 		}
 		this.UpdateFunc = UpdateFunc_;
 		this.settings = settings_;
+		this.closeToKillUpdate = closeToKillUpdate_;
 	});
 	sliceType = $sliceType($String);
 	sliceType$1 = $sliceType(freeboard.FBSetting);
 	sliceType$2 = $sliceType(freeboard.FBSettingOpt);
 	sliceType$3 = $sliceType(freeboard.FBSettingSet);
-	sliceType$4 = $sliceType($emptyInterface);
+	funcType = $funcType([], [], false);
 	ptrType = $ptrType(js.Object);
+	funcType$1 = $funcType([ptrType], [], false);
+	mapType = $mapType($String, $emptyInterface);
+	sliceType$4 = $sliceType($emptyInterface);
+	mapType$1 = $mapType($String, $String);
 	ptrType$1 = $ptrType(TestPlugin);
-	funcType = $funcType([ptrType], [], false);
+	funcType$2 = $funcType([$emptyInterface], [], false);
+	chanType = $chanType($emptyInterface, false, false);
 	init = function() {
 		var $ptr;
 		cons = $global.console;
@@ -6368,16 +6488,32 @@ $packages["main"] = (function() {
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; settings = $f.settings; tp = $f.tp; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		tp = this;
 		tp.settings = settings;
-		$r = tp.UpdateFunc(tp.settings); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = tp.updateNow(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TestPlugin.ptr.prototype.onSettingsChanged }; } $f.$ptr = $ptr; $f.settings = settings; $f.tp = tp; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	TestPlugin.prototype.onSettingsChanged = function(settings) { return this.$val.onSettingsChanged(settings); };
+	TestPlugin.ptr.prototype.updateNow = function() {
+		var $ptr, data, tp, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; data = $f.data; tp = $f.tp; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		tp = this;
+		data = $makeMap($String.keyFor, [{ k: "animal", v: "dinosaur" }, { k: "datatext", v: $internalize(tp.settings.datatext, $String) }]);
+		$r = tp.UpdateFunc(new mapType$1(data)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TestPlugin.ptr.prototype.updateNow }; } $f.$ptr = $ptr; $f.data = data; $f.tp = tp; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TestPlugin.prototype.updateNow = function() { return this.$val.updateNow(); };
+	TestPlugin.ptr.prototype.onDispose = function() {
+		var $ptr, tp;
+		tp = this;
+		$close(tp.closeToKillUpdate);
+	};
+	TestPlugin.prototype.onDispose = function() { return this.$val.onDispose(); };
 	main = function() {
 		var $ptr;
+		pr(new sliceType(["Registering plugin"]));
 		freeboard.LoadDatasourcePlugin($pkg.TestDefinition);
 	};
 	ptrType$1.methods = [{prop: "onSettingsChanged", name: "onSettingsChanged", pkg: "main", typ: $funcType([ptrType], [], false)}, {prop: "updateNow", name: "updateNow", pkg: "main", typ: $funcType([], [], false)}, {prop: "onDispose", name: "onDispose", pkg: "main", typ: $funcType([], [], false)}];
-	TestPlugin.init([{prop: "UpdateFunc", name: "UpdateFunc", pkg: "", typ: funcType, tag: ""}, {prop: "settings", name: "settings", pkg: "main", typ: ptrType, tag: ""}]);
+	TestPlugin.init([{prop: "UpdateFunc", name: "UpdateFunc", pkg: "", typ: funcType$2, tag: ""}, {prop: "settings", name: "settings", pkg: "main", typ: ptrType, tag: ""}, {prop: "closeToKillUpdate", name: "closeToKillUpdate", pkg: "main", typ: chanType, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -6385,33 +6521,41 @@ $packages["main"] = (function() {
 		$r = js.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = time.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		cons = null;
-		$pkg.TestDefinition = new freeboard.DsPluginDefinition.ptr("testplugin1", "test plugin", "This is a test plugin", new sliceType([]), new sliceType$1([new freeboard.FBSetting.ptr("datatext", "Data Text", "Text to provide as data.", freeboard.SettingTextType, sliceType$2.nil, sliceType$3.nil, "Foobar", 0)]), (function $b(settings, newInstanceCallback, updateCallback) {
-			var $ptr, newInstanceCallback, pl, settings, updateCallback, wrapper, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; newInstanceCallback = $f.newInstanceCallback; pl = $f.pl; settings = $f.settings; updateCallback = $f.updateCallback; wrapper = $f.wrapper; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			updateCallback = [updateCallback];
+		$pkg.TestDefinition = new freeboard.DsPluginDefinition.ptr("testplugin1", "test plugin", "This is a test plugin", sliceType.nil, new sliceType$1([new freeboard.FBSetting.ptr("datatext", "Data Text", "Text to provide as data.", freeboard.SettingTextType, sliceType$2.nil, sliceType$3.nil, "Foobar", 0, 0)]), (function(settings, newInstanceCallback, updateCallback) {
+			var $ptr, newInstanceCallback, pl, settings, updateCallback, wrapper;
 			pr(new sliceType(["In NewInstance"]));
-			pl = new TestPlugin.ptr($throwNilPointerError, null);
+			pl = new TestPlugin.ptr($throwNilPointerError, null, $chanNil);
+			pl.closeToKillUpdate = new $Chan($emptyInterface, 0);
 			pr(new sliceType(["Made new TestPlugin, assigning settings."]));
-			$r = pl.onSettingsChanged(settings); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			pr(new sliceType(["Assigning updatefunc."]));
-			pl.UpdateFunc = (function(updateCallback) { return function(i) {
+			pl.settings = settings;
+			pr(new sliceType(["Creating updatefunc closure."]));
+			pl.UpdateFunc = (function(i) {
 				var $ptr, i;
-				updateCallback[0].apply(i);
-			}; })(updateCallback);
-			$go((function(updateCallback) { return function $b(pl$1) {
-				var $ptr, pl$1, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; pl$1 = $f.pl$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				updateCallback.call(undefined, $externalize(i, $emptyInterface));
+			});
+			pr(new sliceType(["Creating heartbeat update goroutine"]));
+			$go((function $b(pl$1) {
+				var $ptr, _r, _selection, pl$1, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _selection = $f._selection; pl$1 = $f.pl$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 				/* while (true) { */ case 1:
-					$r = pl$1.UpdateFunc(pl$1.settings); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					$r = time.Sleep(new time.Duration(1, 705032704)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					_r = $select([[pl$1.closeToKillUpdate], [time.After(new time.Duration(1, 705032704))]]); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+					_selection = _r;
+					/* */ if (_selection[0] === 0) { $s = 4; continue; }
+					/* */ if (_selection[0] === 1) { $s = 5; continue; }
+					/* */ $s = 6; continue;
+					/* if (_selection[0] === 0) { */ case 4:
+						return;
+					/* } else if (_selection[0] === 1) { */ case 5:
+						$r = pl$1.updateNow(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* } */ case 6:
 				/* } */ $s = 1; continue; case 2:
-				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.pl$1 = pl$1; $f.$s = $s; $f.$r = $r; return $f;
-			}; })(updateCallback), [pl]);
-			pr(new sliceType(["Making wrapper"]));
-			wrapper = js.MakeWrapper(pl);
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f._selection = _selection; $f.pl$1 = pl$1; $f.$s = $s; $f.$r = $r; return $f;
+			}), [pl]);
+			pr(new sliceType(["Making return wrapper"]));
+			wrapper = $makeMap($String.keyFor, [{ k: "Plugin", v: pl }, { k: "updateNow", v: new funcType($methodVal(pl, "updateNow")) }, { k: "onDispose", v: new funcType($methodVal(pl, "onDispose")) }, { k: "onSettingsChanged", v: new funcType$1($methodVal(pl, "onSettingsChanged")) }]);
 			pr(new sliceType(["Returning wrapper through newInstanceCallback"]));
-			newInstanceCallback.apply(wrapper);
-			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.newInstanceCallback = newInstanceCallback; $f.pl = pl; $f.settings = settings; $f.updateCallback = updateCallback; $f.wrapper = wrapper; $f.$s = $s; $f.$r = $r; return $f;
+			$global.testPluginInstance = $externalize(wrapper, mapType);
+			newInstanceCallback.call(undefined, $externalize(wrapper, mapType));
 		}));
 		init();
 		if ($pkg === $mainPkg) {

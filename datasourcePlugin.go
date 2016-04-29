@@ -172,7 +172,7 @@ type DsPluginDefinition struct {
 }
 
 // ToFBInterface returns a map for FreeBoard's loadDatasourcePlugin func.
-func (dsp DsPluginDefinition) ToFBInterface() js.M {
+func (dsp DsPluginDefinition) ToFBInterface() map[string]interface{} {
 	output := make(map[string]interface{})
 	output["type_name"] = dsp.TypeName
 	output["display_name"] = dsp.DisplayName
@@ -187,5 +187,5 @@ func (dsp DsPluginDefinition) ToFBInterface() js.M {
 	}
 	output["settings"] = settingSlice
 	output["newInstance"] = dsp.NewInstance
-	return js.M(output)
+	return output
 }

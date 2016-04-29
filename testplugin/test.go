@@ -25,33 +25,28 @@ func pr(s ...string) {
 
 // TestPlugin is me noodling around with the freeboard interface.
 type TestPlugin struct {
-	UpdateFunc func(*js.Object)
-	settings   *js.Object
+	UpdateFunc        func(interface{})
+	settings          *js.Object
+	closeToKillUpdate chan interface{}
 }
 
-// Called when new settings are given.
-//func (tp *TestPlugin) onSettingsChanged(settings map[string]interface{}) {
 func (tp *TestPlugin) onSettingsChanged(settings *js.Object) {
 	tp.settings = settings
-	tp.UpdateFunc(tp.settings)
+	tp.updateNow()
+	//	tp.UpdateFunc(tp.settings)
 }
 
-// A public function we must implement
-// that will be called when the user wants
-// to manually refresh the datasource
 func (tp *TestPlugin) updateNow() {
 	data := map[string]string{
 		"animal":   "dinosaur",
 		"datatext": tp.settings.Get("datatext").String(),
 	}
+	//tp.UpdateFunc(js.MakeWrapper(data))
 	tp.UpdateFunc(data)
 }
 
-// A public function we must implement that
-// will be called when this instance of this
-// plugin is no longer needed. Do anything
-// you need to cleanup after yourself here.
 func (tp *TestPlugin) onDispose() {
+	close(tp.closeToKillUpdate)
 }
 
 // TestDefinition defines a plugin that provides some user-set text.
@@ -65,10 +60,6 @@ var TestDefinition = freeboard.DsPluginDefinition{
 
 	// Front-facing description of this plugin.
 	Description: "This is a test plugin",
-
-	// ExternalScripts are outside script URIs required for
-	// this plugin. They will be loaded prior to the plugin.
-	ExternalScripts: []string{},
 
 	// Settings are the user-facing options for this plugin.
 	// They will be converted to a map[string]interface{} for
@@ -88,35 +79,42 @@ var TestDefinition = freeboard.DsPluginDefinition{
 		},
 	},
 
-	// NewInstance is called to create a new plugin. It is
-	// passed the calculated settings based on the definition's
-	// settings array. This should be kept by the plugin.
-	// It is also passed two special functions:
-	// * newInstanceCallback should be called at the end of NewInstance
-	//   with the new plugin. Remember may have to use js.New to construct
-	//   your new plugin from a constructor function?
-	// * updateCallback should be called with new data whenever it's
-	//   ready for freeboard. This should be kept by the new instance.
 	NewInstance: func(settings, newInstanceCallback, updateCallback *js.Object) {
 		pr("In NewInstance")
 		pl := new(TestPlugin)
+		pl.closeToKillUpdate = make(chan interface{})
 		pr("Made new TestPlugin, assigning settings.")
-		pl.onSettingsChanged(settings)
-		pr("Assigning updatefunc.")
-		pl.UpdateFunc = func(i *js.Object) { updateCallback.Call("apply", i) }
+		pl.settings = settings
+		pr("Creating updatefunc closure.")
+		//pl.UpdateFunc = func(i *js.Object) { updateCallback.Call("call", js.Undefined, i) }
+		pl.UpdateFunc = func(i interface{}) { updateCallback.Call("call", js.Undefined, i) }
+		// The update func.
+		pr("Creating heartbeat update goroutine")
 		go func(pl *TestPlugin) {
 			for {
-				pl.UpdateFunc(pl.settings)
-				time.Sleep(5 * time.Second)
+				select {
+				case <-pl.closeToKillUpdate:
+					return
+				case <-time.After(5 * time.Second):
+					//pl.UpdateFunc(pl.settings)
+					pl.updateNow()
+				}
 			}
 		}(pl)
-		pr("Making wrapper")
-		wrapper := js.MakeWrapper(pl)
+		pr("Making return wrapper")
+		wrapper := map[string]interface{}{
+			"Plugin":            pl,
+			"updateNow":         pl.updateNow,
+			"onDispose":         pl.onDispose,
+			"onSettingsChanged": pl.onSettingsChanged,
+		}
 		pr("Returning wrapper through newInstanceCallback")
-		newInstanceCallback.Call("apply", wrapper)
+		js.Global.Set("testPluginInstance", wrapper)
+		newInstanceCallback.Call("call", js.Undefined, wrapper)
 	},
 }
 
 func main() {
+	pr("Registering plugin")
 	freeboard.LoadDatasourcePlugin(TestDefinition)
 }
