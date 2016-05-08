@@ -2,7 +2,6 @@ package freeboard
 
 import (
 	"github.com/gopherjs/gopherjs/js"
-	"github.com/shurcooL/go/gopherjs_http/jsutil"
 	"honnef.co/go/js/dom"
 )
 
@@ -45,7 +44,7 @@ func WrapWidgetPlugin(wt WidgetPlugin) map[string]interface{} {
 		"plugin":                   wt,
 		"onSettingsChanged":        wt.OnSettingsChanged,
 		"OnCalculatedValueChanged": wt.OnCalculatedValueChanged,
-		"render":                   jsutil.Wrap(wt.Render),
+		"render":                   jsWrap(wt.Render),
 		"getHeight":                wt.GetHeight,
 		"onDispose":                wt.OnDispose,
 	}
