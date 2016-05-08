@@ -9,6 +9,8 @@ import (
 	"honnef.co/go/js/dom"
 )
 
+// (taken from https://github.com/shurcooL/go/blob/master/gopherjs_http/jsutil/jsutil.go,
+//  MIT licensed. Slight changes to remove dependencies that bloat JS.)
 // Wrap returns a wrapper func that handles the conversion from native JavaScript *js.Object parameters
 // to the following types.
 //
